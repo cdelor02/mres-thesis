@@ -1,0 +1,13 @@
+
+command to setup EIDORS on MATLAB:
+run C:\Users\Charlie\Documents\eidors-v3.10\eidors-v3.10-ng\eidors\startup
+
+
+
+how to run files to do an EIT EIDORS simulation
+
+1. run MakeSensorMeshesCharlie.py, with the correct file
+
+2. make sure EIDORS is set up in MATLAB
+
+3. run Gmsh2EidorsexampleCharlie.m in MATLAB
