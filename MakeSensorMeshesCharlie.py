@@ -11,7 +11,7 @@ import meshio
 gmsh.initialize()
 gmsh.option.setNumber("General.Terminal", 1)
 
-inpath='finger_chamber'
+inpath='finger_straight'
 outname=inpath # saved as .msh and .vtu
 
 # Let's merge an STEP mesh that we would like to remesh
@@ -43,9 +43,10 @@ DistMin = 8 + 2 # diameter of hole in the middle is 16, so give it 2 mm beyond t
 DistMax= 25 # radius of outer wall in this example
 
 
-PointTag1=fields.addPoint(0,0.7,-21, Lmin)
-PointTag2=fields.addPoint(0,0.7,21, Lmin)
-LineTag=fields.addLine(PointTag1,PointTag2)
+# points 9 and 10, creating a line which goes through the finger centerline
+PointTag1=fields.addPoint(15, 10, 0, Lmin)
+PointTag2=fields.addPoint(-75, 10, 0, Lmin)
+LineTag=fields.addLine(PointTag1, PointTag2)
 
 # update all points
 fields.synchronize()

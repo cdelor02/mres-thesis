@@ -13,7 +13,7 @@
 
 %% load the mesh into matlab
 
-fname='bent_finger_model';
+fname='finger_straight';
 
 %if you have the meshiolibrary
 if exist('meshio')
@@ -115,14 +115,30 @@ title('EIDORS is happy with the mesh IN METERS');
 %              0, 0, 0];
 
 % manually plot each electrode around square chamber perimeter
-elec_pos = [ -0.01, 0, 0;
-             -0.01, 0, 0.01; 
-             -0.01, 0, 0.02; 
-             0, 0, 0.02;
-             0.01, 0, 0.02;
-             0.01, 0, 0.01;
-             0.01, 0, 0;
-             0, 0, 0];
+% elec_pos = [ -0.01, 0, 0;
+%              -0.01, 0, 0.01; 
+%              -0.01, 0, 0.02; 
+%              0, 0, 0.02;
+%              0.01, 0, 0.02;
+%              0.01, 0, 0.01;
+%              0.01, 0, 0;
+%              0, 0, 0];
+
+% elec_pos = [ -0.01, 0, 0; % in m
+%              -0.01, 0, 0.01; 
+%              -0.01, 0, 0.02; 
+%              0, 0, 0.02;
+%              0.01, 0, 0.02;
+%              0.01, 0, 0.01;
+%              0.01, 0, 0;
+%              0, 0, 0];
+
+elec_pos = [-0.060, 0, 0;
+            -0.030, 0, 0; 
+             0,     0, 0;
+            -0.060, 0.02, 0;
+            -0.030, 0.02, 0; 
+             0,     0.02, 0];
 
 % define a ground          
          
