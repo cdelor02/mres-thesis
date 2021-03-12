@@ -13,7 +13,7 @@
 
 %% load the mesh into matlab
 
-fname='finger_straight';
+fname = 'finger_one_bend';
 
 %if you have the meshiolibrary
 if exist('meshio')
@@ -133,13 +133,24 @@ title('EIDORS is happy with the mesh IN METERS');
 %              0.01, 0, 0;
 %              0, 0, 0];
 
-elec_pos = [-0.060, 0, 0;
-            -0.030, 0, 0; 
+% No bend
+% elec_pos = [-0.060, 0, 0;
+%             -0.030, 0, 0; 
+%              0,     0, 0;
+%             -0.060, 0.02, 0;
+%             -0.030, 0.02, 0; 
+%              0,     0.02, 0];
+
+
+% One bend
+elec_pos = [-0.060, 0, -0.025;
+            -0.030, 0, -0.007; 
              0,     0, 0;
-            -0.060, 0.02, 0;
-            -0.030, 0.02, 0; 
+            -0.060, 0.02, -0.025;
+            -0.030, 0.02, -0.007; 
              0,     0.02, 0];
 
+         
 % define a ground          
          
 % uncomment this line to plot the points on top of the mesh surface before
@@ -295,4 +306,4 @@ Sens = (sum(J(:, :).^2, 1).^0.5); % change to J(n,:) to see just single measurem
 % sometimes its necessary to take dB to make it easier to visualise, the range of values are huge!
 % Sens=log10(abs(Sens)); % its better if you let paraview handle it as you get better axis labels
 
-meshio.write('single_J.vtu', MDL.nodes, MDL.elems, {Sens}, {'J'});
+meshio.write([fname '_J.vtu'], MDL.nodes, MDL.elems, {Sens}, {'J'});
