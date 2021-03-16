@@ -13,7 +13,7 @@
 
 %% load the mesh into matlab
 
-fname = 'finger_one_bend';
+fname = 'finger_straight_hollow';
 
 %if you have the meshiolibrary
 if exist('meshio')
@@ -140,15 +140,23 @@ title('EIDORS is happy with the mesh IN METERS');
 %             -0.060, 0.02, 0;
 %             -0.030, 0.02, 0; 
 %              0,     0.02, 0];
+         
+% No bend, HOLLOW
+elec_pos = [-0.060, 0+0.002, 0;
+            -0.030, 0+0.002, 0; 
+             0,     0+0.002, 0;
+            -0.060, 0.02-0.002, 0;
+            -0.030, 0.02-0.002, 0; 
+             0,     0.02-0.002, 0];
 
 
 % One bend
-elec_pos = [-0.060, 0, -0.025;
-            -0.030, 0, -0.007; 
-             0,     0, 0;
-            -0.060, 0.02, -0.025;
-            -0.030, 0.02, -0.007; 
-             0,     0.02, 0];
+% elec_pos = [-0.060, 0, -0.025;
+%             -0.030, 0, -0.007; 
+%              0,     0, 0;
+%             -0.060, 0.02, -0.025;
+%             -0.030, 0.02, -0.007; 
+%              0,     0.02, 0];
 
          
 % define a ground          
@@ -209,7 +217,7 @@ N_elec = size(elec_pos, 1);
 % example, but this isnt optimal tbh
  options = {'meas_current', 'no_rotate_meas'};
 
-[stim, meas_select] = mk_stim_patterns(8, 1,'{ad}', '{ad}', options, 0.005);
+[stim, meas_select] = mk_stim_patterns(8, 1,'{op}', '{op}', options, 0.005);
                                     % 8 electrodes, 1 ring, ad==adjacent so
                                     % injecting between adjacent
                                     % electrodes; this is the worst method
@@ -270,7 +278,7 @@ Inj_number = 1;
 curvolt     = v_baseline.volt(:, Inj_number);
 elemcur     = calc_elem_current(img, curvolt);
 elemcur_mag = vecnorm(elemcur, 2, 2);
-
+h7
 current_img = mk_image(MDL, elemcur_mag);
 
 figure;
