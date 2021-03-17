@@ -47,10 +47,10 @@ DistMax= 25 # radius of outer wall in this example
 
 # points 9 and 10, creating a line which goes through the finger centerline
 PointTag1 = fields.addPoint(15, 10, 0, Lmin)
-#PointTag2 = fields.addPoint(-20.3, 10, 0, Lmin)
-PointTag2=fields.addPoint(-75, 10, 0, Lmin)
+#PointTag2 = fields.addPoint(-20.3, 10, 0, Lmin) # use this second point if finger is bent
+PointTag2 = fields.addPoint(-75, 10, 0, Lmin) # use this second point if finger is straight
 
-# find midpoint of end of finger (the middle of the end surface)
+# find midpoint of end of finger (the middle of the surface)
 # https://www.meracalculator.com/graphic/3dimensional-midpoint.php
 # Between points 3 and 11
  
@@ -58,11 +58,10 @@ xe = -143.922 /2
 ye = 10
 ze = -62.679 / 2
 
-
-PointTag3 = fields.addPoint(xe, ye, ze, Lmin)
+#PointTag3 = fields.addPoint(xe, ye, ze, Lmin) # 3rd point (fingertip) in single bend finger model
 
 LineTag=fields.addLine(PointTag1, PointTag2)
-#LineTag=fields.addLine(PointTag2, PointTag3)
+#LineTag=fields.addLine(PointTag2, PointTag3) # include this for one and two bend models
 
 
 # update all points
