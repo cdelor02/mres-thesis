@@ -217,7 +217,9 @@ N_elec = size(elec_pos, 1);
 % example, but this isnt optimal tbh
  options = {'meas_current', 'no_rotate_meas'};
 
-[stim, meas_select] = mk_stim_patterns(8, 1,'{op}', '{op}', options, 0.005);
+ % HERE WE HAVE HARD CODED 6 ELECS BETTER TO SPECIFY THE MEASUREMENTS BY
+ % PASSING ARRAY TO stim_meas_list 
+[stim, meas_select] = mk_stim_patterns(6, 1,'{op}', '{op}', options, 0.005);
                                     % 8 electrodes, 1 ring, ad==adjacent so
                                     % injecting between adjacent
                                     % electrodes; this is the worst method
@@ -236,9 +238,10 @@ MDL.meas_select     = meas_select;
 %floated node that is removed by this line, hence the warning from this
 %line. the replacement it finds it ok though
 MDL = remove_unused_nodes(MDL); % DO THIS EARLIER, BEFORE DEFINING GROUND NODE; might crash though
-if valid_fwd_model(MDL)
-    disp('Forward model is ok! Yay!');
-end
+
+fprintf('Validating FWD...')
+valid_fwd_model(MDL);
+fprintf('OK! :)\n');
 %% Conductivity values
 
 % conductivity - each element in mesh needs to be assigned a conductivity
@@ -278,7 +281,6 @@ Inj_number = 1;
 curvolt     = v_baseline.volt(:, Inj_number);
 elemcur     = calc_elem_current(img, curvolt);
 elemcur_mag = vecnorm(elemcur, 2, 2);
-h7
 current_img = mk_image(MDL, elemcur_mag);
 
 figure;
@@ -292,8 +294,7 @@ title(sprintf('Current field for stim %d', Inj_number));
 
 % This is not easy to see! instead lets look at it in paraview instead
 
-meshio.write('single_currentmag.vtu', MDL.nodes, MDL.elems, {elemcur_mag}, {'currentmagnitude'}, {curvolt}, {'voltagefield'});
-% writeVTKcell('example_current.vtk',MDL.elems,MDL.nodes,elemcur_mag);
+meshio.write([fname 'single_currentmag.vtu'], MDL.nodes, MDL.elems, {elemcur_mag}, {'currentmagnitude'}, {curvolt}, {'voltagefield'});
 
 %% visualise sensitivity
 
