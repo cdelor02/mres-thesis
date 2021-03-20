@@ -13,7 +13,7 @@
 
 %% load the mesh into matlab
 
-fname = 'finger_one_bend';
+fname = 'finger_two_bend_hollow';
 
 %if you have the meshiolibrary
 if exist('meshio')
@@ -124,14 +124,6 @@ title('EIDORS is happy with the mesh IN METERS');
 %              0.01, 0, 0;
 %              0, 0, 0];
 
-% elec_pos = [ -0.01, 0, 0; % in m
-%              -0.01, 0, 0.01; 
-%              -0.01, 0, 0.02; 
-%              0, 0, 0.02;
-%              0.01, 0, 0.02;
-%              0.01, 0, 0.01;
-%              0.01, 0, 0;
-%              0, 0, 0];
 
 % No bend
 % elec_pos = [-0.060, 0, 0;
@@ -141,7 +133,7 @@ title('EIDORS is happy with the mesh IN METERS');
 %             -0.030, 0.02, 0; 
 %              0,     0.02, 0];
          
-% No bend, HOLLOW
+% No bend, hollow
 % elec_pos = [-0.060, 0+0.002, 0;
 %             -0.030, 0+0.002, 0; 
 %              0,     0+0.002, 0;
@@ -150,16 +142,22 @@ title('EIDORS is happy with the mesh IN METERS');
 %              0,     0.02-0.002, 0];
 
 
-% One bend
-elec_pos = [-0.060, 0, -0.025;
+% One bend, hollow
+% elec_pos = [-0.060, 0, -0.025;
+%             -0.030, 0, -0.007; 
+%              0,     0, 0;
+%             -0.060, 0.02, -0.025;
+%             -0.030, 0.02, -0.007; 
+%              0,     0.02, 0];
+
+% Two bend, hollow
+elec_pos = [-0.055, 0, -0.030;
             -0.030, 0, -0.007; 
              0,     0, 0;
-            -0.060, 0.02, -0.025;
+            -0.055, 0, -0.030;
             -0.030, 0.02, -0.007; 
              0,     0.02, 0];
-
-         
-% define a ground          
+                 
          
 % uncomment this line to plot the points on top of the mesh surface before
 % checking in eidors later

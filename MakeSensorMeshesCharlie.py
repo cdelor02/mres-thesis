@@ -13,7 +13,7 @@ import meshio
 gmsh.initialize()
 gmsh.option.setNumber("General.Terminal", 1)
 
-inpath='finger_one_bend'
+inpath='finger_two_bend_hollow'
 outname=inpath # saved as .msh and .vtu
 
 # Let's merge an STEP mesh that we would like to remesh
@@ -53,15 +53,29 @@ PointTag2 = fields.addPoint(-20.3, 10, 0, Lmin) # use this second point if finge
 # find midpoint of end of finger (the middle of the surface)
 # https://www.meracalculator.com/graphic/3dimensional-midpoint.php
 # Between points 3 and 11
- 
-xe = -143.922 /2 
-ye = 10
-ze = -62.679 / 2
 
-PointTag3 = fields.addPoint(xe, ye, ze, Lmin) # 3rd point (fingertip) in single bend finger model
+# fingertip for one bend finger 
+#x1 = -143.922 /2 
+#y1 = 10
+#z1 = -62.679 / 2
+#PointTag3 = fields.addPoint(x1, y1, z1, Lmin) # 3rd point (fingertip) in single bend finger model
+
+
+x2 = -96.6023/2
+y2 = 10
+z2 = -35.3589/2
+PointTag3 = fields.addPoint(x2, y2, z2, Lmin) # 3rd point (2nd joint) in two bend finger model
+
+x3 = -129.2819/2
+y3 = 10
+z3 = -91.9614/2
+PointTag4 = fields.addPoint(x3, y3, z3, Lmin) # 4th point (fingertip) in two bend finger model
+
+
 
 LineTag=fields.addLine(PointTag1, PointTag2)
 LineTag=fields.addLine(PointTag2, PointTag3) # include this for one and two bend models
+LineTag=fields.addLine(PointTag3, PointTag4) # include this for two bend model
 
 
 # update all points
