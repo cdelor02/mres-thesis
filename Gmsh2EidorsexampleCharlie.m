@@ -151,13 +151,20 @@ title('EIDORS is happy with the mesh IN METERS');
 %              0,     0.02, 0];
 
 % Two bend, hollow
+% elec_pos = [-0.055, 0, -0.030;
+%             -0.030, 0, -0.007; 
+%              0,     0, 0;
+%             -0.055, 0, -0.030;
+%             -0.030, 0.02, -0.007; 
+%              0,     0.02, 0];
+     
+% Two bend, hollow, INTERIOR of finger shell
 elec_pos = [-0.055, 0, -0.030;
             -0.030, 0, -0.007; 
              0,     0, 0;
-            -0.055, 0, -0.030;
+            -0.055, 0.02, -0.030;
             -0.030, 0.02, -0.007; 
-             0,     0.02, 0];
-                 
+             0,     0.02, 0];         
          
 % uncomment this line to plot the points on top of the mesh surface before
 % checking in eidors later
@@ -272,7 +279,7 @@ v_baseline = fwd_solve(img);
 
 %% Visualise the current injection
 
-% we have 8 current injections, we can chose which one to view
+% we have 6 current injections, we can chose which one to view
 Inj_number = 1;
 
 % convert voltage field into current field and take magnitude
