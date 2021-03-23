@@ -320,4 +320,26 @@ Sens = (sum(J(:, :).^2, 1).^0.5); % change to J(n,:) to see just single measurem
 % sometimes its necessary to take dB to make it easier to visualise, the range of values are huge!
 % Sens=log10(abs(Sens)); % its better if you let paraview handle it as you get better axis labels
 
-meshio.write([fname '_J.vtu'], MDL.nodes, MDL.elems, {Sens}, {'J'});
+meshio.write([fname '_moremesh_J.vtu'], MDL.nodes, MDL.elems, {Sens}, {'J'});
+
+
+%% Plot the voltages for this image
+
+
+figure; 
+plot(v_baseline.meas);
+hold on;
+title('Voltages of two bend finger')
+
+
+%% plot the voltages together
+load('all_meas.mat')
+
+figure; 
+plot(all_meas(1, :), 'r', 'LineWidth', 2.0); 
+hold on; 
+plot(all_meas(2, :), 'g--', 'LineWidth', 2.0); 
+plot(all_meas(3, :), 'b--', 'LineWidth', 2.0);
+legend('Straight', '1 bend', '2 bend');
+title('Voltages overlaid', 'FontSize', 20);
+

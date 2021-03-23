@@ -37,18 +37,18 @@ fields = model.geo
 # todo - define the line in the cad model
 # could use the MathEval option too?
 
-Lmin = 0.5 # smallest size in mesh units
-Lmax = 5 # biggest size
+Lmin = 1 #5 # smallest size in mesh units
+Lmax = 1 #0.5 # biggest size
 
 # see threshold description below
-DistMin = 8 + 2 # diameter of hole in the middle is 16, so give it 2 mm beyond this of Lmin size elements
+DistMin = 20 #8 + 2 # diameter of hole in the middle is 16, so give it 2 mm beyond this of Lmin size elements
 DistMax= 25 # radius of outer wall in this example
 
 
 # points 9 and 10, creating a line which goes through the finger centerline
 PointTag1 = fields.addPoint(15, 10, 0, Lmin)
-PointTag2 = fields.addPoint(-20.3, 10, 0, Lmin) # use this second point if finger is bent
-#PointTag2 = fields.addPoint(-75, 10, 0, Lmin) # use this second point if finger is straight
+PointTag2 = fields.addPoint(-20.3, 10, 0, Lmin) # use this as second point if finger is bent
+#PointTag2 = fields.addPoint(-75, 10, 0, Lmin) # use this as second point if finger is straight
 
 # find midpoint of end of finger (the middle of the surface)
 # https://www.meracalculator.com/graphic/3dimensional-midpoint.php
