@@ -13,7 +13,7 @@
 
 %% load the mesh into matlab
 
-fname = 'finger_two_bend_hollow';
+fname = 'pneunet_approximate_test'; %'finger_two_bend_hollow';
 
 %if you have the meshiolibrary
 if exist('meshio')
@@ -165,7 +165,14 @@ elec_pos = [-0.055, 0, -0.030;
             -0.055, 0.02, -0.030;
             -0.030, 0.02, -0.007; 
              0,     0.02, 0];         
-         
+       
+% Pneunet test         
+elec_pos = [0, 0, 0.0475;
+            0, 0.02, -0.0475; 
+             0,     0, 0; % save
+            0, 0, -0.0475;
+            0, 0.02, -0.0475; 
+             0,     0.02, 0];   % save      
 % uncomment this line to plot the points on top of the mesh surface before
 % checking in eidors later
 figure; show_fem(MDL); hold on; plot3(elec_pos(:, 1), elec_pos(:, 2), elec_pos(:, 3), '.', 'Markersize', 50); hold off
@@ -224,12 +231,21 @@ N_elec = size(elec_pos, 1);
 
  % HERE WE HAVE HARD CODED 6 ELECS BETTER TO SPECIFY THE MEASUREMENTS BY
  % PASSING ARRAY TO stim_meas_list 
+
+% TODO
+stim_list = [1, 6, 2, 5; 
+             1, 3, 2, 4]; %% complete this! look at model and fix it
+         
+         
 [stim, meas_select] = mk_stim_patterns(6, 1,'{op}', '{op}', options, 0.005);
-                                    % 8 electrodes, 1 ring, ad==adjacent so
+                                    %  electrodes, 1 ring, ad==adjacent so
                                     % injecting between adjacent
                                     % electrodes; this is the worst method
                                     % to pick for us, so we need to fix
                                     % this (be clever with this!)
+
+% **                                    
+                                    
 MDL.stimulation     = stim;
 MDL.meas_select     = meas_select;
 
@@ -330,7 +346,8 @@ figure;
 plot(v_baseline.meas);
 hold on;
 title('Voltages of two bend finger')
-
+set(findall(gcf, '-property', 'FontSize'), 'FontSize', 15);
+set(findall(gcf, '-property', 'MarkerSize'), 'MarkerSize', 15);
 
 %% plot the voltages together
 load('all_meas.mat')

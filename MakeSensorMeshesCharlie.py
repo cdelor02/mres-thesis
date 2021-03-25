@@ -13,7 +13,7 @@ import meshio
 gmsh.initialize()
 gmsh.option.setNumber("General.Terminal", 1)
 
-inpath='finger_two_bend_hollow'
+inpath='pneunet_approximate_test'#'finger_two_bend_hollow'
 outname=inpath # saved as .msh and .vtu
 
 # Let's merge an STEP mesh that we would like to remesh
@@ -47,8 +47,8 @@ DistMax= 25 # radius of outer wall in this example
 
 # points 9 and 10, creating a line which goes through the finger centerline
 PointTag1 = fields.addPoint(15, 10, 0, Lmin)
-PointTag2 = fields.addPoint(-20.3, 10, 0, Lmin) # use this as second point if finger is bent
-#PointTag2 = fields.addPoint(-75, 10, 0, Lmin) # use this as second point if finger is straight
+#PointTag2 = fields.addPoint(-20.3, 10, 0, Lmin) # use this as second point if finger is bent
+PointTag2 = fields.addPoint(-75, 10, 0, Lmin) # use this as second point if finger is straight
 
 # find midpoint of end of finger (the middle of the surface)
 # https://www.meracalculator.com/graphic/3dimensional-midpoint.php
@@ -61,21 +61,21 @@ PointTag2 = fields.addPoint(-20.3, 10, 0, Lmin) # use this as second point if fi
 #PointTag3 = fields.addPoint(x1, y1, z1, Lmin) # 3rd point (fingertip) in single bend finger model
 
 
-x2 = -96.6023/2
-y2 = 10
-z2 = -35.3589/2
-PointTag3 = fields.addPoint(x2, y2, z2, Lmin) # 3rd point (2nd joint) in two bend finger model
+#x2 = -96.6023/2
+#y2 = 10
+#z2 = -35.3589/2
+#PointTag3 = fields.addPoint(x2, y2, z2, Lmin) # 3rd point (2nd joint) in two bend finger model
 
-x3 = -129.2819/2
-y3 = 10
-z3 = -91.9614/2
-PointTag4 = fields.addPoint(x3, y3, z3, Lmin) # 4th point (fingertip) in two bend finger model
+#x3 = -129.2819/2
+#y3 = 10
+#z3 = -91.9614/2
+#PointTag4 = fields.addPoint(x3, y3, z3, Lmin) # 4th point (fingertip) in two bend finger model
 
 
 
 LineTag=fields.addLine(PointTag1, PointTag2)
-LineTag=fields.addLine(PointTag2, PointTag3) # include this for one and two bend models
-LineTag=fields.addLine(PointTag3, PointTag4) # include this for two bend model
+#LineTag=fields.addLine(PointTag2, PointTag3) # include this for one and two bend models
+#LineTag=fields.addLine(PointTag3, PointTag4) # include this for two bend model
 
 
 # update all points
