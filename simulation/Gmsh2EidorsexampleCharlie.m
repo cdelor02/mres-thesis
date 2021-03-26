@@ -13,7 +13,7 @@
 
 %% load the mesh into matlab
 
-fname = 'pneunet_approximate_test'; %'finger_two_bend_hollow';
+fname = 'pneunet_approximate_test_first_bend'; %'finger_two_bend_hollow';
 
 %if you have the meshiolibrary
 if exist('meshio')
@@ -159,20 +159,29 @@ title('EIDORS is happy with the mesh IN METERS');
 %              0,     0.02, 0];
      
 % Two bend, hollow, INTERIOR of finger shell
-elec_pos = [-0.055, 0, -0.030;
-            -0.030, 0, -0.007; 
-             0,     0, 0;
-            -0.055, 0.02, -0.030;
-            -0.030, 0.02, -0.007; 
-             0,     0.02, 0];         
+% elec_pos = [-0.055, 0, -0.030;
+%             -0.030, 0, -0.007; 
+%              0,     0, 0;
+%             -0.055, 0.02, -0.030;
+%             -0.030, 0.02, -0.007; 
+%              0,     0.02, 0];         
        
 % Pneunet test         
-elec_pos = [0, 0, 0.0475;
+% elec_pos = [0, 0,     0.0475;
+%             0, 0.02, -0.0475; 
+%             0, 0,     0;
+%             0, 0,    -0.0475;
+%             0, 0.02, -0.0475; 
+%             0, 0.02, 0];  
+        
+% Bendign pneunet test        
+elec_pos = [0, 0,     0.0475;
             0, 0.02, -0.0475; 
-             0,     0, 0; % save
-            0, 0, -0.0475;
+            -0.024, 0,     0;
+            0, 0,    -0.0475;
             0, 0.02, -0.0475; 
-             0,     0.02, 0];   % save      
+            -0.024, 0.02, 0];         
+        
 % uncomment this line to plot the points on top of the mesh surface before
 % checking in eidors later
 figure; show_fem(MDL); hold on; plot3(elec_pos(:, 1), elec_pos(:, 2), elec_pos(:, 3), '.', 'Markersize', 50); hold off
@@ -345,18 +354,18 @@ meshio.write([fname '_moremesh_J.vtu'], MDL.nodes, MDL.elems, {Sens}, {'J'});
 figure; 
 plot(v_baseline.meas);
 hold on;
-title('Voltages of two bend finger')
+title('Voltages of first bend Pneunet finger')
 set(findall(gcf, '-property', 'FontSize'), 'FontSize', 15);
 set(findall(gcf, '-property', 'MarkerSize'), 'MarkerSize', 15);
 
 %% plot the voltages together
-load('all_meas.mat')
-
-figure; 
-plot(all_meas(1, :), 'r', 'LineWidth', 2.0); 
-hold on; 
-plot(all_meas(2, :), 'g--', 'LineWidth', 2.0); 
-plot(all_meas(3, :), 'b--', 'LineWidth', 2.0);
-legend('Straight', '1 bend', '2 bend');
-title('Voltages overlaid', 'FontSize', 20);
+% load('all_meas.mat')
+% 
+% figure; 
+% plot(all_meas(1, :), 'r', 'LineWidth', 2.0); 
+% hold on; 
+% plot(all_meas(2, :), 'g--', 'LineWidth', 2.0); 
+% plot(all_meas(3, :), 'b--', 'LineWidth', 2.0);
+% legend('Straight', '1 bend', '2 bend');
+% title('Voltages overlaid of first bend pneunet finger', 'FontSize', 20);
 
