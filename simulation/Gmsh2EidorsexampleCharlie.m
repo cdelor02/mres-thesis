@@ -13,7 +13,7 @@
 
 %% load the mesh into matlab
 
-fname = 'pneunet_approximate_test_first_bend'; %'finger_two_bend_hollow';
+fname = 'pneunet_approximate_test_second_bend'; %'finger_two_bend_hollow';
 
 %if you have the meshiolibrary
 if exist('meshio')
@@ -174,13 +174,22 @@ title('EIDORS is happy with the mesh IN METERS');
 %             0, 0.02, -0.0475; 
 %             0, 0.02, 0];  
         
-% Bendign pneunet test        
-elec_pos = [0, 0,     0.0475;
-            0, 0.02, -0.0475; 
-            -0.024, 0,     0;
-            0, 0,    -0.0475;
-            0, 0.02, -0.0475; 
-            -0.024, 0.02, 0];         
+% % First bend pneunet test        
+% elec_pos = [0,      0,     0.0475;
+%             0,      0.02, -0.0475; 
+%             -0.024, 0,     0;
+%             0,      0,    -0.0475;
+%             0,      0.02, -0.0475; 
+%             -0.024, 0.02,  0];         
+
+% Second bend pneunet test        
+elec_pos = [0.008,      0,     0.03;
+            0.008,      0.02, -0.03; 
+            -0.03, 0,     0;
+            0.008,      0,    -0.03;
+            0.008,      0.02, -0.03; 
+            -0.03, 0.02,  0];         
+                
         
 % uncomment this line to plot the points on top of the mesh surface before
 % checking in eidors later
@@ -255,8 +264,8 @@ stim_list = [1, 6, 2, 5;
 
 % **                                    
                                     
-MDL.stimulation     = stim;
-MDL.meas_select     = meas_select;
+MDL.stimulation = stim;
+MDL.meas_select = meas_select;
 
 % get a easier to read protocol out
 [prt]= stim_meas_list(stim);
@@ -354,7 +363,7 @@ meshio.write([fname '_moremesh_J.vtu'], MDL.nodes, MDL.elems, {Sens}, {'J'});
 figure; 
 plot(v_baseline.meas);
 hold on;
-title('Voltages of first bend Pneunet finger')
+title('Voltages of second bend Pneunet finger')
 set(findall(gcf, '-property', 'FontSize'), 'FontSize', 15);
 set(findall(gcf, '-property', 'MarkerSize'), 'MarkerSize', 15);
 
