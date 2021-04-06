@@ -13,7 +13,7 @@ import meshio
 gmsh.initialize()
 gmsh.option.setNumber("General.Terminal", 1)
 
-inpath= 'pneunet_approximate_test_second_bend' #'pneunet_approximate_test'#'finger_two_bend_hollow'
+inpath= 'pneunet_approximate_test_first_bend_INFLATE' #'pneunet_approximate_test'#'finger_two_bend_hollow'
 outname=inpath # saved as .msh and .vtu
 
 # Let's merge an STEP mesh that we would like to remesh

@@ -6,4 +6,14 @@ Packages and modules used:
 - [EIDORS](http://eidors3d.sourceforge.net)
 - [gmsh](https://gmsh.info)
 - [mesh2matlab](https://github.com/Jimbles/meshio2matlab)
+
+
+Resources:
+- [Soft robotics toolkit](https://softroboticstoolkit.com/home)
+
+
+Software used:
 - [ParaView](https://www.paraview.org)
+- [SolidWorks](https://www.solidworks.com)
+- [MATLAB](https://www.mathworks.com/products/matlab.html)
+- [LabVIEW](https://www.ni.com/en-gb/shop/labview.html)

@@ -13,7 +13,7 @@
 
 %% load the mesh into matlab
 
-fname = 'pneunet_approximate_test_second_bend'; %'finger_two_bend_hollow';
+fname = 'pneunet_approximate_test_first_bend_INFLATE'; %'finger_two_bend_hollow';
 
 %if you have the meshiolibrary
 if exist('meshio')
@@ -175,20 +175,20 @@ title('EIDORS is happy with the mesh IN METERS');
 %             0, 0.02, 0];  
         
 % % First bend pneunet test        
-% elec_pos = [0,      0,     0.0475;
-%             0,      0.02, -0.0475; 
-%             -0.024, 0,     0;
-%             0,      0,    -0.0475;
-%             0,      0.02, -0.0475; 
-%             -0.024, 0.02,  0];         
+elec_pos = [0,      0,     0.0475;
+            0,      0.02, -0.0475; 
+            -0.024, 0,     0;
+            0,      0,    -0.0475;
+            0,      0.02, -0.0475; 
+            -0.024, 0.02,  0];         
 
 % Second bend pneunet test        
-elec_pos = [0.008,      0,     0.03;
-            0.008,      0.02, -0.03; 
-            -0.03, 0,     0;
-            0.008,      0,    -0.03;
-            0.008,      0.02, -0.03; 
-            -0.03, 0.02,  0];         
+% elec_pos = [0.008,      0,     0.03;
+%             0.008,      0.02, -0.03; 
+%             -0.03, 0,     0;
+%             0.008,      0,    -0.03;
+%             0.008,      0.02, -0.03; 
+%             -0.03, 0.02,  0];         
                 
         
 % uncomment this line to plot the points on top of the mesh surface before
