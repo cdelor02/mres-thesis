@@ -35,4 +35,5 @@ ax.set_ylabel('Voltage (mV)')
 
 #plt.setp(ax.get_xticklabels(), rotation=30, horizontalalignment='right')
 
+plt.tight_layout()
 plt.show()
