@@ -6,6 +6,7 @@ Packages and modules used:
 - [EIDORS](http://eidors3d.sourceforge.net)
 - [gmsh](https://gmsh.info)
 - [mesh2matlab](https://github.com/Jimbles/meshio2matlab)
+- [OpenCV](https://opencv.org)
 
 
 Resources:
@@ -15,5 +16,7 @@ Resources:
 Software used:
 - [ParaView](https://www.paraview.org)
 - [SolidWorks](https://www.solidworks.com)
+- [AutoCAD Inventor (v2021)](https://www.autodesk.co.uk/products/inventor/overview)
 - [MATLAB](https://www.mathworks.com/products/matlab.html)
 - [LabVIEW](https://www.ni.com/en-gb/shop/labview.html)
+- [Arduino](https://www.arduino.cc)

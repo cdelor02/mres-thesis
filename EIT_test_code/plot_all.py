@@ -41,7 +41,8 @@ df = df - df[:1].values.squeeze()
 df[df < 0] = 0
 
 
-ax = df[cols][120:430].plot(xlabel="X", ylabel="Y (mV)", linewidth=4, fontsize=15)
+ax = df[cols].plot(xlabel="X", ylabel="Y (mV)", linewidth=4, fontsize=15)
+#ax = df[cols][0:len(df[["1"]])-2].plot(xlabel="X", ylabel="Y (mV)", linewidth=4, fontsize=15)
 #title=filename, 
 
 plt.legend(bbox_to_anchor=(1.0, 1.0), loc='upper left')
@@ -81,26 +82,26 @@ ax.set_ylabel('Change in voltage (mV)', fontsize=15)
 
 
 # Create approximate of cablelengths (for incremental data)
-cablelens = np.zeros(len(df))
+#cablelens = np.zeros(len(df))
 #cablelens = np.zeros(len(df[120:430]))
-cablelens[0:140] = 0
-cablelens[180:220] = 5
-cablelens[260:296] = 10
-cablelens[330:364] = 15
-cablelens[383:430] = 20
+#cablelens[0:140] = 0
+#cablelens[180:220] = 5
+#cablelens[260:296] = 10
+#cablelens[330:364] = 15
+#cablelens[383:430] = 20
 
-cablelens[0:179] = np.linspace(0.0, 5.0, 179)
-cablelens[179] = 5.0
+#cablelens[0:179] = np.linspace(0.0, 5.0, 179)
+#cablelens[179] = 5.0
 
-cablelens[220:259] = np.linspace(5.0, 10.0, len(cablelens[220:259]))
-cablelens[259] = 10.0
+#cablelens[220:259] = np.linspace(5.0, 10.0, len(cablelens[220:259]))
+#cablelens[259] = 10.0
 
-cablelens[296:330] = np.linspace(10.0, 15.0, len(cablelens[296:330]))
+#cablelens[296:330] = np.linspace(10.0, 15.0, len(cablelens[296:330]))
 
-cablelens[364:383] = np.linspace(15.0, 20.0, len(cablelens[364:383]))
+#cablelens[364:383] = np.linspace(15.0, 20.0, len(cablelens[364:383]))
 
 
-m, b = np.polyfit(cablelens, df[["1", "2", "3"]], 1)
+#m, b = np.polyfit(cablelens, df[["1", "2", "3"]], 1)
 #plt.plot(cablelens[120:430], df[["1"]][120:430])
 
 plt.tight_layout()
