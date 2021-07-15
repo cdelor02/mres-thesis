@@ -13,21 +13,24 @@
 #define TRIGGER_PIN 22   // pin for activating EIT system
 
 const int stepsPerRevolution = 200;  // change this to fit 
-// the number of steps per revolution for your motor
+// the number of steps per revolution for your stepper
 
-bool dir             = true;
-int incomingb        = 0;
-int receivedVal      = 0;
-boolean newData      = false;
-int num              = 0;
-double spool_diam    = 31.4159;
-double steps_per_1mm = 1 / (spool_diam / stepsPerRevolution);
-int microstps        = 2;
-int iters            = 0;
-unsigned long starttime;
-unsigned long endtime;
-double cable_len_val = 0;
-unsigned long curr_steps    = 0;
+int receivedVal         = 0;
+boolean newData         = false;
+double spool_diam       = 31.4159;
+double steps_per_1mm    = 1 / (spool_diam / stepsPerRevolution);
+int microstps           = 2;
+int iters               = 0;
+unsigned int curr_steps = 0;
+int trigger_freq        = 40; // Hz
+
+String shakeInput       = "";
+char* shakeKey          = "S";
+bool shakeFlag          = false;
+float timeAtStep        = 0;
+String flushInputBuffer = "";
+char* data              = "";
+
 
 #include <DueTimer.h>
 #include <TMC2130Stepper.h>
@@ -35,8 +38,8 @@ TMC2130Stepper driver = TMC2130Stepper(EN_PIN, DIR_PIN, STEP_PIN, CS_PIN);
 
 void setup() {
 	Serial.begin(9600);
-	while(!Serial);
-	Serial.println("Start...");
+	while(!Serial);'
+//	Serial.println("Start...");
 	SPI.begin();
 	pinMode(MISO, INPUT_PULLUP);
 	driver.begin(); 			    // Initiate pins and registeries
@@ -45,56 +48,69 @@ void setup() {
 	
 	digitalWrite(EN_PIN, LOW);
   driver.microsteps(microstps);
-  Serial.print("Microsteps: "); Serial.println(driver.microsteps());
+//  Serial.print("Microsteps: "); Serial.println(driver.microsteps());
   pinMode(TRIGGER_PIN, OUTPUT);
-  Timer3.attachInterrupt(triggerReading).setFrequency(10);
-  Serial.print("Curr steps start: "); Serial.println(curr_steps);
+  Timer3.attachInterrupt(triggerReading).setFrequency(trigger_freq);
+//  Serial.print("Trigger freq: "); Serial.print(trigger_freq); Serial.println(" Hz");
+//  Serial.print("Curr steps: "); Serial.println(curr_steps);
+//  Serial.print("Available bytes: "); Serial.println(Serial.availableForWrite());
+
+  Timer3.start();
 }
 
 
-void loop() {   // DON'T FORGET TO SET SHAFT_DIR
+void loop() {   // DON'T FORGET SHAFT_DIR
 
-// ** I think the stepper works better at 256 microsteps
+// ** the stepper works better at 256 microsteps
 // oneFlex() and oneRelax() only for when microsteps != 0
-  recvOneVal();
-  if (newData == true) {
-    Serial.print("# iterations: "); Serial.println(receivedVal);
-    Timer3.start();
-    while (iters < receivedVal) {
-      Serial.print("Iteration: "); Serial.println(iters+1);
+
+  delay(2000);
+  oneFlex(100,  1000);
+  delay(2000);
+  oneRelax(100, 1000);
+
+  //recvOneVal();
+//  receivedVal = 100;
+//  newData = true;
+
+//  if (newData == true) {
+    //Serial.print("# iterations: "); Serial.println(receivedVal);
+//    Timer3.start();
+//    while (true) {
+//      Serial.print("Iteration: "); Serial.println(iters+1);
 //      actuateInStages(true, 2, 134, 2000, 40);
 //      delay(2000);
 //      actuateInStages(false, 2, 134, 2000, 40);
 //      delay(2000);      
       //delayWithSampling(2000, 40);
 
-      oneFlex(100, 40);
-      Serial.print("curr_steps after Flex: "); Serial.println(curr_steps);
-      delay(4000);
+//      delay(4000);
+//      oneFlex(receivedVal, 1000);
+      //Serial.print("ACTUAL curr_steps after Flex: "); Serial.println(curr_steps/2);
+//      delay(4000);
 //      oneFlex(67, 40);
 //      delay(4000);
-      oneRelax(100, 40);
-            Serial.print("curr_steps after relax: "); Serial.println(curr_steps);
+//      oneRelax(receivedVal, 1000);
+    //Serial.print("ACTUAL curr_steps after relax: "); Serial.println(curr_steps/2);
 
-      delay(4000);
 //      oneRelax(67, 40);
 //      delay(4000);
 
-    iters++;
-    }
-    newData = false;
-    Timer3.stop();
-    if (iters == receivedVal) {
-      Timer3.stop();
-    }
-  }
+//    iters++;
+//    }
+//    newData = false;
+//    Timer3.stop();
+//    if (iters == receivedVal) {
+//      Timer3.stop();
+//    }
+//  }
 }
 
 
 void triggerReading(){
-  digitalWrite(TRIGGER_PIN, HIGH);
-  digitalWrite(TRIGGER_PIN, LOW);
-  Serial.print("curr steps: "); Serial.println(curr_steps);
+//  digitalWrite(TRIGGER_PIN, HIGH);
+//  digitalWrite(TRIGGER_PIN, LOW);
+  Serial.println(curr_steps/2); // sending step val to pyserial
 }
 
 void recvOneVal() {
@@ -105,21 +121,6 @@ void recvOneVal() {
 }
 
 
-void delayWithSampling(int duration, int rate) {
-  starttime = millis();
-  //endtime = starttime;
-  while ((millis() - starttime) <= duration) {
-
-  // sample data at specified rate
-  if (starttime % rate == 0) {
-      digitalWrite(TRIGGER_PIN, HIGH);
-      digitalWrite(TRIGGER_PIN, LOW);      
-  }  
-  
-  //endtime = millis();
-  }
-}
-
 //* could use another arduino pin to measure/signal the movement/motion of the stepper
 //  could setup other program on daq to record voltage on direction pin
 //  or record digital pin direction pin
@@ -128,42 +129,28 @@ void delayWithSampling(int duration, int rate) {
 // oneFlex : params: 
 // - steps is the number of stepper steps the motor will turn
 // - rate is the trigger rate for the DAQ sampling
-void oneFlex(int steps, int rate) { //can drop this speed of data collection to make sure it's definitely synchronised with the data collection
+void oneFlex(int steps, int dly) { //can drop this speed of data collection to make sure it's definitely synchronised with the data collection
   driver.shaft_dir(0);
-
   for (int i=0; i < steps * microstps; i++) {
     curr_steps++;
-//    if (i % rate == 0) {
-//      digitalWrite(TRIGGER_PIN, HIGH);
-//    }
     digitalWrite(STEP_PIN, HIGH);
-    delayMicroseconds(1000);
+    delayMicroseconds(dly);
     digitalWrite(STEP_PIN, LOW);
-    delayMicroseconds(1000); 
-//    if (i % rate == 0) {
-//      digitalWrite(TRIGGER_PIN, LOW);
-//    }  
+    delayMicroseconds(dly); 
   }
 }
 
 // oneRelax : params: 
 // - steps is the number of stepper steps the motor will turn
 // - rate is the trigger rate for the DAQ sampling
-void oneRelax(int steps, int rate) {
+void oneRelax(int steps, int dly) {
   driver.shaft_dir(1);
-  
   for (int i=0; i < steps * microstps; i++) {
     curr_steps--;
-//    if (i % rate == 0) {
-//      digitalWrite(TRIGGER_PIN, HIGH);
-//    }
     digitalWrite(STEP_PIN, HIGH);
-    delayMicroseconds(1000);
+    delayMicroseconds(dly);
     digitalWrite(STEP_PIN, LOW);
-    delayMicroseconds(1000); 
-//    if (i % rate == 0) {
-//      digitalWrite(TRIGGER_PIN, LOW);
-//    }  
+    delayMicroseconds(dly); 
   }
 }
 
@@ -183,8 +170,8 @@ void actuateInStages(bool flex, int stages, int steps, int dly, int rate) {
 }
 
 double stepToDist(int steps) {
-  Serial.println("stepToDist");
-  Serial.print(steps); Serial.print(" "); Serial.println(steps_per_1mm);
+  // Takes distance in steps and converts it to the
+  // corresponding millimeter change given the spool diameter
   return steps / steps_per_1mm;
 }
 
@@ -192,4 +179,23 @@ int distToStep(int dist) {
   // Takes distance in mm and converts it to the
   // corresponding number of steps given the spool diameter
   return dist * steps_per_1mm;
+}
+
+
+void handShake() {
+  while (Serial.available() > 0) {
+    shakeInput = Serial.readStringUntil('\n');
+    if (shakeInput != ""){
+//      sprintf(data, "%s\n", shakeKey);
+      Serial.println(shakeInput);
+      Serial.flush();
+//        shakeFlag = true;
+        // Enable the motor after handshaking
+//        digitalWrite(TRIGGER_PIN, HIGH);
+//        shakeInput = "";
+        // Initialise the time variables
+//        timeAtStep = micros();
+//        flushInputBuffer = Serial.readStringUntil('\n');
+    }
+  }
 }

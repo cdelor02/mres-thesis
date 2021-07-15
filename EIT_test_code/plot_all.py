@@ -62,9 +62,9 @@ my = np.zeros(3)
 #	my[i] = df[cols[i]][mx[i]]
 #	plt.plot(mx[i], my[i], 'r+')
 
-#ax.set_title(filename[2:filenamelen])
-ax.set_xlabel('Time', fontsize=15)
-ax.set_ylabel('Change in voltage (mV)', fontsize=15)
+ax.set_title(filename)#[2:filenamelen])
+ax.set_xlabel('Time \n' + '(# iterations: ' + filename[0] + ')', fontsize=15)
+ax.set_ylabel('Change in voltage (Volt)', fontsize=15)
 
 
 # Find smallest change peaks/troughs
