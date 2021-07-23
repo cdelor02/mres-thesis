@@ -7,6 +7,7 @@ Packages and modules used:
 - [gmsh](https://gmsh.info)
 - [mesh2matlab](https://github.com/Jimbles/meshio2matlab)
 - [OpenCV](https://opencv.org)
+- [NumPy](https://numpy.org)
 
 
 Resources:

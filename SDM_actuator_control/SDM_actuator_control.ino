@@ -22,7 +22,7 @@ double steps_per_1mm    = 1 / (spool_diam / stepsPerRevolution);
 int microstps           = 2;
 int iters               = 0;
 unsigned int curr_steps = 0;
-int trigger_freq        = 40; // Hz
+int trigger_freq        = 60; // Hz
 
 String shakeInput       = "";
 char* shakeKey          = "S";
@@ -37,9 +37,8 @@ char* data              = "";
 TMC2130Stepper driver = TMC2130Stepper(EN_PIN, DIR_PIN, STEP_PIN, CS_PIN);
 
 void setup() {
-	Serial.begin(9600);
-	while(!Serial);'
-//	Serial.println("Start...");
+	Serial.begin(115200);
+	while(!Serial);
 	SPI.begin();
 	pinMode(MISO, INPUT_PULLUP);
 	driver.begin(); 			    // Initiate pins and registeries
@@ -108,9 +107,9 @@ void loop() {   // DON'T FORGET SHAFT_DIR
 
 
 void triggerReading(){
-//  digitalWrite(TRIGGER_PIN, HIGH);
-//  digitalWrite(TRIGGER_PIN, LOW);
-  Serial.println(curr_steps/2); // sending step val to pyserial
+  digitalWrite(TRIGGER_PIN, HIGH);
+  digitalWrite(TRIGGER_PIN, LOW);
+  Serial.println(curr_steps/2);    // sending step val to pyserial
 }
 
 void recvOneVal() {

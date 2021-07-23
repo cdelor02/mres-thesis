@@ -4,7 +4,7 @@
 # https://cmdlinetips.com/2019/10/how-to-make-a-plot-with-two-different-y-axis-in-python-with-matplotlib/
 # https://stackoverflow.com/questions/15575466/how-do-you-improve-matplotlib-image-quality
 # http://jonathansoma.com/lede/algorithms-2017/classes/fuzziness-matplotlib/understand-df-plot-in-pandas/
-# 
+# https://www.kite.com/python/answers/how-to-plot-a-line-of-best-fit-in-python
 
 from   matplotlib.colors import LinearSegmentedColormap
 import matplotlib.pyplot as plt
