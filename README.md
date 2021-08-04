@@ -8,6 +8,7 @@ Packages and modules used:
 - [mesh2matlab](https://github.com/Jimbles/meshio2matlab)
 - [OpenCV](https://opencv.org)
 - [NumPy](https://numpy.org)
+- [Scikit-learn](https://scikit-learn.org/stable/)
 
 
 Resources:
