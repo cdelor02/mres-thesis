@@ -108,6 +108,8 @@ while(True):
 step_cpy = stepper_motor_vals.astype(int)
 step_cpy = np.c_[step_cpy]
 
-#np.savetxt("./" + directory + "/" + filename, step_cpy, #np.c_[stepper_motor_vals], 
-#           fmt="%d", delimiter=",")
+
+# https://stackoverflow.com/questions/24106575/numpy-savetxt-to-csv-with-integer-integer-string
+np.savetxt("./" + directory + "/" + filename, step_cpy, #np.c_[stepper_motor_vals], 
+           fmt="%d", delimiter=",")
 

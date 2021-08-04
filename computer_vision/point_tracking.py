@@ -44,7 +44,7 @@ def click_event(event, x, y, flags, param):
 
 
 # Some command line argument parsing for usability
-parser = argparse.ArgumentParser(description='MRes project optical tracking \
+parser = argparse.ArgumentParser(description='DEPRECATED \n MRes project optical tracking \
                                               for actuator ground truth \
                                               measurements.')
 parser.add_argument('image', type=str, help='path to image/video file, or [live] for live camera')
@@ -219,6 +219,9 @@ if mode == 'contour':
         # but to fit in a byte (256 different values) 
         # it's value is halved.
 
+        #cv2.imshow("frame", frame)
+        #cv2.waitKey(0)
+
         # H values in OpenCV for different colours
         red = 0; green = 60; blue = 120; yellow = 30
 
@@ -244,6 +247,7 @@ if mode == 'contour':
         #               [180-sensitivity, 100, 100], # lower target 1
         #               [180, 255, 255]])            # upper target 1
 
+        #these are still set for red
         lower_target_0 = np.array([0,                 0,   100])
         upper_target_0 = np.array([sensitivity,       255, 255])
         lower_target_1 = np.array([180 - sensitivity, 100, 100])

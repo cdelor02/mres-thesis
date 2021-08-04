@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="9.4.2">
+<eagle version="9.6.2">
 <drawing>
 <settings>
 <setting alwaysvectorfont="no"/>
@@ -1856,22 +1856,6 @@ by exp-lbrs.ulp</description>
 <part name="TP6" library="RigidPCBSensor_1" deviceset="PTR1" device=""/>
 <part name="TP7" library="RigidPCBSensor_1" deviceset="PTR1" device=""/>
 <part name="TP8" library="RigidPCBSensor_1" deviceset="PTR1" device=""/>
-<part name="E9" library="testpad" library_urn="urn:adsk.eagle:library:385" deviceset="TPSQ" device="TP15R" package3d_urn="urn:adsk.eagle:package:27968/1" value="TPSQTP15R"/>
-<part name="E10" library="testpad" library_urn="urn:adsk.eagle:library:385" deviceset="TPSQ" device="TP15R" package3d_urn="urn:adsk.eagle:package:27968/1" value="TPSQTP15R"/>
-<part name="E11" library="testpad" library_urn="urn:adsk.eagle:library:385" deviceset="TPSQ" device="TP15R" package3d_urn="urn:adsk.eagle:package:27968/1" value="TPSQTP15R"/>
-<part name="E12" library="testpad" library_urn="urn:adsk.eagle:library:385" deviceset="TPSQ" device="TP15R" package3d_urn="urn:adsk.eagle:package:27968/1" value="TPSQTP15R"/>
-<part name="E13" library="testpad" library_urn="urn:adsk.eagle:library:385" deviceset="TPSQ" device="TP15R" package3d_urn="urn:adsk.eagle:package:27968/1" value="TPSQTP15R"/>
-<part name="E14" library="testpad" library_urn="urn:adsk.eagle:library:385" deviceset="TPSQ" device="TP15R" package3d_urn="urn:adsk.eagle:package:27968/1" value="TPSQTP15R"/>
-<part name="E15" library="testpad" library_urn="urn:adsk.eagle:library:385" deviceset="TPSQ" device="TP15R" package3d_urn="urn:adsk.eagle:package:27968/1" value="TPSQTP15R"/>
-<part name="E16" library="testpad" library_urn="urn:adsk.eagle:library:385" deviceset="TPSQ" device="TP15R" package3d_urn="urn:adsk.eagle:package:27968/1" value="TPSQTP15R"/>
-<part name="TP9" library="RigidPCBSensor_1" deviceset="PTR1" device=""/>
-<part name="TP10" library="RigidPCBSensor_1" deviceset="PTR1" device=""/>
-<part name="TP11" library="RigidPCBSensor_1" deviceset="PTR1" device=""/>
-<part name="TP12" library="RigidPCBSensor_1" deviceset="PTR1" device=""/>
-<part name="TP13" library="RigidPCBSensor_1" deviceset="PTR1" device=""/>
-<part name="TP14" library="RigidPCBSensor_1" deviceset="PTR1" device=""/>
-<part name="TP15" library="RigidPCBSensor_1" deviceset="PTR1" device=""/>
-<part name="TP16" library="RigidPCBSensor_1" deviceset="PTR1" device=""/>
 <part name="E17" library="testpad" library_urn="urn:adsk.eagle:library:385" deviceset="TPSQ" device="TP15R" package3d_urn="urn:adsk.eagle:package:27968/1" value="TPSQTP15R"/>
 <part name="TP17" library="RigidPCBSensor_1" deviceset="PTR1" device=""/>
 </parts>
@@ -1937,65 +1921,9 @@ by exp-lbrs.ulp</description>
 <instance part="TP8" gate="G$1" x="43.18" y="99.06" smashed="yes" rot="R180">
 <attribute name="NAME" x="44.196" y="105.41" size="1.778" layer="95" rot="R270"/>
 </instance>
-<instance part="E9" gate="G$1" x="48.26" y="78.74" smashed="yes">
-<attribute name="NAME" x="45.72" y="74.295" size="1.778" layer="95"/>
-<attribute name="TP_SIGNAL_NAME" x="50.8" y="77.47" size="1.778" layer="97"/>
-</instance>
-<instance part="E10" gate="G$1" x="53.34" y="78.74" smashed="yes">
-<attribute name="NAME" x="50.8" y="74.295" size="1.778" layer="95"/>
-<attribute name="TP_SIGNAL_NAME" x="55.88" y="77.47" size="1.778" layer="97"/>
-</instance>
-<instance part="E11" gate="G$1" x="58.42" y="78.74" smashed="yes">
-<attribute name="NAME" x="55.88" y="74.295" size="1.778" layer="95"/>
-<attribute name="TP_SIGNAL_NAME" x="60.96" y="77.47" size="1.778" layer="97"/>
-</instance>
-<instance part="E12" gate="G$1" x="63.5" y="78.74" smashed="yes">
-<attribute name="NAME" x="60.96" y="74.295" size="1.778" layer="95"/>
-<attribute name="TP_SIGNAL_NAME" x="66.04" y="77.47" size="1.778" layer="97"/>
-</instance>
-<instance part="E13" gate="G$1" x="68.58" y="78.74" smashed="yes">
-<attribute name="NAME" x="66.04" y="74.295" size="1.778" layer="95"/>
-<attribute name="TP_SIGNAL_NAME" x="71.12" y="77.47" size="1.778" layer="97"/>
-</instance>
-<instance part="E14" gate="G$1" x="73.66" y="78.74" smashed="yes">
-<attribute name="NAME" x="71.12" y="74.295" size="1.778" layer="95"/>
-<attribute name="TP_SIGNAL_NAME" x="76.2" y="77.47" size="1.778" layer="97"/>
-</instance>
-<instance part="E15" gate="G$1" x="78.74" y="78.74" smashed="yes">
-<attribute name="NAME" x="76.2" y="74.295" size="1.778" layer="95"/>
-<attribute name="TP_SIGNAL_NAME" x="81.28" y="77.47" size="1.778" layer="97"/>
-</instance>
-<instance part="E16" gate="G$1" x="83.82" y="78.74" smashed="yes">
-<attribute name="NAME" x="81.28" y="74.295" size="1.778" layer="95"/>
-<attribute name="TP_SIGNAL_NAME" x="86.36" y="77.47" size="1.778" layer="97"/>
-</instance>
-<instance part="TP9" gate="G$1" x="48.26" y="99.06" smashed="yes" rot="R180">
-<attribute name="NAME" x="49.276" y="105.41" size="1.778" layer="95" rot="R270"/>
-</instance>
-<instance part="TP10" gate="G$1" x="53.34" y="99.06" smashed="yes" rot="R180">
-<attribute name="NAME" x="54.356" y="105.41" size="1.778" layer="95" rot="R270"/>
-</instance>
-<instance part="TP11" gate="G$1" x="58.42" y="99.06" smashed="yes" rot="R180">
-<attribute name="NAME" x="59.436" y="105.41" size="1.778" layer="95" rot="R270"/>
-</instance>
-<instance part="TP12" gate="G$1" x="63.5" y="99.06" smashed="yes" rot="R180">
-<attribute name="NAME" x="64.516" y="105.41" size="1.778" layer="95" rot="R270"/>
-</instance>
-<instance part="TP13" gate="G$1" x="68.58" y="99.06" smashed="yes" rot="R180">
-<attribute name="NAME" x="69.596" y="105.41" size="1.778" layer="95" rot="R270"/>
-</instance>
-<instance part="TP14" gate="G$1" x="73.66" y="99.06" smashed="yes" rot="R180">
-<attribute name="NAME" x="74.676" y="105.41" size="1.778" layer="95" rot="R270"/>
-</instance>
-<instance part="TP15" gate="G$1" x="78.74" y="99.06" smashed="yes" rot="R180">
-<attribute name="NAME" x="79.756" y="105.41" size="1.778" layer="95" rot="R270"/>
-</instance>
-<instance part="TP16" gate="G$1" x="83.82" y="99.06" smashed="yes" rot="R180">
-<attribute name="NAME" x="84.836" y="105.41" size="1.778" layer="95" rot="R270"/>
-</instance>
-<instance part="E17" gate="G$1" x="111.76" y="81.28" smashed="yes">
-<attribute name="NAME" x="109.22" y="76.835" size="1.778" layer="95"/>
-<attribute name="TP_SIGNAL_NAME" x="114.3" y="80.01" size="1.778" layer="97"/>
+<instance part="E17" gate="G$1" x="101.6" y="81.28" smashed="yes">
+<attribute name="NAME" x="99.06" y="76.835" size="1.778" layer="95"/>
+<attribute name="TP_SIGNAL_NAME" x="104.14" y="80.01" size="1.778" layer="97"/>
 </instance>
 <instance part="TP17" gate="G$1" x="88.9" y="96.52" smashed="yes" rot="R180">
 <attribute name="NAME" x="89.916" y="102.87" size="1.778" layer="95" rot="R270"/>
@@ -2060,65 +1988,9 @@ by exp-lbrs.ulp</description>
 <wire x1="43.18" y1="96.52" x2="43.18" y2="81.28" width="0.1524" layer="91"/>
 </segment>
 </net>
-<net name="N$9" class="0">
-<segment>
-<pinref part="TP9" gate="G$1" pin="TP"/>
-<pinref part="E9" gate="G$1" pin="TP"/>
-<wire x1="48.26" y1="96.52" x2="48.26" y2="81.28" width="0.1524" layer="91"/>
-</segment>
-</net>
-<net name="N$10" class="0">
-<segment>
-<pinref part="TP10" gate="G$1" pin="TP"/>
-<pinref part="E10" gate="G$1" pin="TP"/>
-<wire x1="53.34" y1="96.52" x2="53.34" y2="81.28" width="0.1524" layer="91"/>
-</segment>
-</net>
-<net name="N$11" class="0">
-<segment>
-<pinref part="TP11" gate="G$1" pin="TP"/>
-<pinref part="E11" gate="G$1" pin="TP"/>
-<wire x1="58.42" y1="96.52" x2="58.42" y2="81.28" width="0.1524" layer="91"/>
-</segment>
-</net>
-<net name="N$12" class="0">
-<segment>
-<pinref part="TP12" gate="G$1" pin="TP"/>
-<pinref part="E12" gate="G$1" pin="TP"/>
-<wire x1="63.5" y1="96.52" x2="63.5" y2="81.28" width="0.1524" layer="91"/>
-</segment>
-</net>
-<net name="N$13" class="0">
-<segment>
-<pinref part="TP13" gate="G$1" pin="TP"/>
-<pinref part="E13" gate="G$1" pin="TP"/>
-<wire x1="68.58" y1="96.52" x2="68.58" y2="81.28" width="0.1524" layer="91"/>
-</segment>
-</net>
-<net name="N$14" class="0">
-<segment>
-<pinref part="TP14" gate="G$1" pin="TP"/>
-<pinref part="E14" gate="G$1" pin="TP"/>
-<wire x1="73.66" y1="96.52" x2="73.66" y2="81.28" width="0.1524" layer="91"/>
-</segment>
-</net>
-<net name="N$15" class="0">
-<segment>
-<pinref part="TP15" gate="G$1" pin="TP"/>
-<pinref part="E15" gate="G$1" pin="TP"/>
-<wire x1="78.74" y1="96.52" x2="78.74" y2="81.28" width="0.1524" layer="91"/>
-</segment>
-</net>
-<net name="N$16" class="0">
-<segment>
-<pinref part="TP16" gate="G$1" pin="TP"/>
-<pinref part="E16" gate="G$1" pin="TP"/>
-<wire x1="83.82" y1="96.52" x2="83.82" y2="81.28" width="0.1524" layer="91"/>
-</segment>
-</net>
 <net name="N$17" class="0">
 <segment>
-<wire x1="88.9" y1="93.98" x2="111.76" y2="83.82" width="0.1524" layer="91"/>
+<wire x1="88.9" y1="93.98" x2="101.6" y2="83.82" width="0.1524" layer="91"/>
 <pinref part="E17" gate="G$1" pin="TP"/>
 <pinref part="TP17" gate="G$1" pin="TP"/>
 </segment>
