@@ -9,19 +9,38 @@
 # need to use .legacy for creating the trackers in createTrackerByName
 #https://stackoverflow.com/questions/65967096/multi-object-tracking-expected-ptrcvlegacytracker-for-argument-newtrack
 
+# saving video
+# https://stackoverflow.com/questions/30103077/what-is-the-codec-for-mp4-videos-in-python-opencv
+
 from __future__ import print_function
 import matplotlib.pyplot as plt
 from random import randint
 import pandas as pd
 import numpy as np
+import argparse
+import math
 import time
 import sys
 import cv2
 
 
+# Some command line argument parsing for usability
+parser = argparse.ArgumentParser(description='MRes project optical tracking \
+                                              for actuator ground truth \
+                                              measurements.')
+parser.add_argument('image', type=str, help='path to image/video file, or [live] for live camera')
+parser.add_argument('filename', type=str, help='file in which to save the new video')
+args      = parser.parse_args()
+image     = args.image
+filename  = args.filename
+directory = "./opencv_videos"
+
 
 trackerTypes = ['BOOSTING',   'MIL',    'KCF',   'TLD', 
                 'MEDIANFLOW', 'GOTURN', 'MOSSE', 'CSRT']
+
+dist_btwn_joint_centres = 105.48     #11 / 25.4 # these are in inches,
+                                     # I have to use pixels for now
 
 def createTrackerByName(trackerType):
 # Create a tracker based on tracker name
@@ -50,6 +69,13 @@ def createTrackerByName(trackerType):
     
     return tracker
 
+
+## NOT SURE THIS BELONGS HERE 
+# Calculate distance between two points
+def calculateDistance(x1, y1, x2, y2):
+    return math.sqrt((x2 - x1)**2 + (y2 - y1)**2)
+
+
 if __name__ == '__main__':
 
   #print("Default tracking algoritm is CSRT \n"
@@ -61,11 +87,26 @@ if __name__ == '__main__':
                          # top left corner frequently
 
   # Set video to load
-    videoPath = "slow_traffic_small.mp4"#"videos/chaplin.mp4"
+    #videoPath = "slow_traffic_small.mp4"#"videos/chaplin.mp4"
   
+    videoPath = directory + "/" + image#"./opencv_videos/" + image#r_and_b_markers_actuator_footage.mp4"#filetypetest_trimmed.mp4"
+
   # Create a video capture object to read videos
-    cap = cv2.VideoCapture(0)#videoPath)
- 
+    #if image == '0' or '1':
+    #    cap = cv2.VideoCapture(int(image))#videoPath)
+    #else:
+    cap = cv2.VideoCapture(videoPath)
+
+    frame_width  = int(cap.get(3))
+    frame_height = int(cap.get(4))
+
+    # Define the codec and create VideoWriter object. The output is 'filename'.
+    out = cv2.VideoWriter("tracked_" + filename,
+                          cv2.VideoWriter_fourcc(*'mp4v'), #'M','J','P','G'), 
+                          10, (frame_width, frame_height))
+
+
+
   # Read first frame
     success, frame = cap.read()
   # quit if unable to read the video file
@@ -84,6 +125,7 @@ if __name__ == '__main__':
   # Alert user to set the scene, as the objects must be selected from first frame
     print("3s to selection, get ready!")
     time.sleep(3.0)
+
 
   # OpenCV's selectROI function doesn't work for selecting multiple objects in Python
   # So we will call this function in a loop till we are done selecting all objects
@@ -127,6 +169,7 @@ yss = []
 xs  = []
 ys  = []
 
+print(len(bboxes), "regions selected")
 
   # Process video and track objects
 while cap.isOpened():
@@ -148,16 +191,31 @@ while cap.isOpened():
       
         x = int((p1[0] + p2[0]) / 2)
         y = int((p1[1] + p2[1]) / 2)
-        cv2.circle(frame, (x,y), radius=6, color=colors[i], thickness=-1)
+        #cv2.circle(frame, (x,y), radius=6, color=colors[i], thickness=-1)
+        cv2.rectangle(frame, (x-3,y+3), (x+3,y-3), colors[i], 2, 1)
         #print("x", x, "- type x:", type(x))
         #print("y", y, "- type y:", type(y))
 
     # save coordinates into lists
         xs.append(x)
         ys.append(y)
-
-    #cv2.line()
     
+    # draw lines between each detected point
+    for i in range(len(ys) - 1):
+        x0,y0 = xs[i], ys[i]
+        x1,y1 = xs[i+1], ys[i+1]
+        cv2.line(frame, (x0, y0), (x1, y1), color=colors[i], thickness=2)
+
+        # find midpoint between each line
+        d = calculateDistance(x0, y0, x1, y1)
+        #print("Dist:", d, "pixels")
+        if d == 0:
+            print("BAD")
+            exit(1)
+        ## dist_btwn... SHOULD BE BIGGER CAUSE IT SHOULD BE IN PIXELS NOT MM
+        #theta = math.asin(d / (dist_btwn_joint_centres))
+        #print("d", d, "theta", theta)
+
     xss.append(xs)
     yss.append(ys)
     xs = []
@@ -165,11 +223,13 @@ while cap.isOpened():
     # show frame
     cv2.imshow('MultiTracker', frame)
 
+    out.write(frame)
 
     # quit on ESC button
     if cv2.waitKey(1) & 0xFF == 27:  # Esc pressed
         break
 
+out.release()
 
   ## Format into arrays and save the data
   ### --> NEED TO MAKE THIS FORMAT MORE CONVIENENT, ZIP THE VALUES

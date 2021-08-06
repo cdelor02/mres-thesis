@@ -11,6 +11,7 @@
 #define STEP_PIN    5    //			18			54	//step
 #define CS_PIN      7    //			17			64	//chip select
 #define TRIGGER_PIN 22   // pin for activating EIT system
+#define CAM_PIN     26   // pin for syncing webcam footage
 
 const int stepsPerRevolution = 200;  // change this to fit 
 // the number of steps per revolution for your stepper
@@ -49,12 +50,14 @@ void setup() {
   driver.microsteps(microstps);
 //  Serial.print("Microsteps: "); Serial.println(driver.microsteps());
   pinMode(TRIGGER_PIN, OUTPUT);
+  pinMode(CAM_PIN, OUTPUT);
   Timer3.attachInterrupt(triggerReading).setFrequency(trigger_freq);
 //  Serial.print("Trigger freq: "); Serial.print(trigger_freq); Serial.println(" Hz");
 //  Serial.print("Curr steps: "); Serial.println(curr_steps);
 //  Serial.print("Available bytes: "); Serial.println(Serial.availableForWrite());
 
   Timer3.start();
+  digitalWrite(CAM_PIN, HIGH);
 }
 
 
@@ -63,10 +66,18 @@ void loop() {   // DON'T FORGET SHAFT_DIR
 // ** the stepper works better at 256 microsteps
 // oneFlex() and oneRelax() only for when microsteps != 0
 
-  delay(2000);
-  oneFlex(100,  1000);
-  delay(2000);
-  oneRelax(100, 1000);
+  if (iters == 5) {
+    digitalWrite(CAM_PIN, LOW);
+  }
+
+  if (iters < 5) {
+    delay(2000);
+    oneFlex(100,  1000);
+    delay(2000);
+    oneRelax(100, 1000);
+    iters++;
+  }
+
 
   //recvOneVal();
 //  receivedVal = 100;
