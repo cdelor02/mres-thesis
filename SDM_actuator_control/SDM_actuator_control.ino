@@ -23,7 +23,7 @@ double steps_per_1mm    = 1 / (spool_diam / stepsPerRevolution);
 int microstps           = 2;
 int iters               = 0;
 unsigned int curr_steps = 0;
-int trigger_freq        = 60; // Hz
+int trigger_freq        = 40; // Hz
 
 String shakeInput       = "";
 char* shakeKey          = "S";
@@ -32,6 +32,8 @@ float timeAtStep        = 0;
 String flushInputBuffer = "";
 char* data              = "";
 
+
+int loopcount=0;
 
 #include <DueTimer.h>
 #include <TMC2130Stepper.h>
@@ -66,15 +68,32 @@ void loop() {   // DON'T FORGET SHAFT_DIR
 // ** the stepper works better at 256 microsteps
 // oneFlex() and oneRelax() only for when microsteps != 0
 
+//  recvOneVal();
+//  if(newData == true) {
+//    if(receivedVal == -1) {
+//      digitalWrite(CAM_PIN, HIGH);
+//      delay(2 * 1000);
+//      digitalWrite(CAM_PIN, LOW);
+//      Serial.println(receivedVal);
+//      newData = false;
+//      Serial.flush();
+//    }
+//  } 
+
   if (iters == 5) {
     digitalWrite(CAM_PIN, LOW);
+    Timer3.stop();
+    loopcount=0;
+    Serial.println(-1);
+    iters++; //only run it once
   }
 
   if (iters < 5) {
     delay(2000);
-    oneFlex(100,  1000);
+    oneFlex(100,  4000);
     delay(2000);
-    oneRelax(100, 1000);
+    oneRelax(100, 4000);
+    //delay(1000);
     iters++;
   }
 
@@ -119,8 +138,15 @@ void loop() {   // DON'T FORGET SHAFT_DIR
 
 void triggerReading(){
   digitalWrite(TRIGGER_PIN, HIGH);
-  digitalWrite(TRIGGER_PIN, LOW);
+  //loopcount++;
+
+  //if (loopcount % 10 == 0)
+  //{
+    //Serial.print(loopcount);
+    //Serial.print(",");
   Serial.println(curr_steps/2);    // sending step val to pyserial
+  //}
+  digitalWrite(TRIGGER_PIN, LOW);
 }
 
 void recvOneVal() {

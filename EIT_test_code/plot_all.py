@@ -1,11 +1,11 @@
-# command line args: python plot_all.py filename_here 
-# [--e for only electrodes, otherwise all] [hidex to hide x axis labels, otherwise a]
+# command line args: python plot_all.py filename_here
+# [--e for only electrodes, otherwise all] [hidex to hide x axis labels,
+# otherwise a]
 
 # https://cmdlinetips.com/2019/10/how-to-make-a-plot-with-two-different-y-axis-in-python-with-matplotlib/
 # https://stackoverflow.com/questions/15575466/how-do-you-improve-matplotlib-image-quality
 # http://jonathansoma.com/lede/algorithms-2017/classes/fuzziness-matplotlib/understand-df-plot-in-pandas/
 # https://www.kite.com/python/answers/how-to-plot-a-line-of-best-fit-in-python
-
 from   matplotlib.colors import LinearSegmentedColormap
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -13,38 +13,41 @@ import pandas as pd
 import numpy  as np
 import sys 
 
-filename    = sys.argv[1]
+filename = sys.argv[1]
 filenamelen = len(filename)
-plottype    = sys.argv[2]
-xaxisbool   = sys.argv[3]
+plottype = sys.argv[2]
+xaxisbool = sys.argv[3]
 
-nem  = []
+nem = []
 cols = []
 
 if plottype == "--e":
-	nem  = ["3", "B", "C", "D", "2", "F", "G", "H", "1"]
+	nem = ["3", "B", "C", "D", "2", "F", "G", "H", "1"]
 	cols = ["1", "2", "3"]
 else:
-	nem  = ["A", "B", "C", "D", "E", "F", "G", "H", "I"]
+	nem = ["A", "B", "C", "D", "E", "F", "G", "H", "I"]
 	cols = ["A", "B", "C", "D", "E", "F", "G", "H", "I"]
 
 
 df = pd.read_csv(filename, sep='\t', lineterminator='\n', skiprows=1, names=nem)
 
-#xs = np.linspace(0.0, 
-#	int((len(df[["B"]]) * 0.02)), 
+#df.columns = nem[0:df.shape[1]]
+
+#xs = np.linspace(0.0,
+#	int((len(df[["B"]]) * 0.02)),
 #	0.02)
 
 
 # Plot change in voltage (so subtract initial value from all values)
+#if df.shape[1] > 1:
 df = df - df[:1].values.squeeze()
 df[df < 0] = 0
 
 
 ax = df[cols].plot(xlabel="X", ylabel="Y (mV)", linewidth=4, fontsize=15)
-#ax = df[cols][0:len(df[["1"]])-2].plot(xlabel="X", ylabel="Y (mV)", linewidth=4, fontsize=15)
-#title=filename, 
-
+#ax = df[cols][0:len(df[["1"]])-2].plot(xlabel="X", ylabel="Y (mV)",
+#linewidth=4, fontsize=15)
+#title=filename,
 plt.legend(bbox_to_anchor=(1.0, 1.0), loc='upper left')
 
 # hide X axis labels, b/c the time stuff doesn't really matter
@@ -61,7 +64,6 @@ my = np.zeros(3)
 #	mx[i] = np.argmax(df[cols[i]])
 #	my[i] = df[cols[i]][mx[i]]
 #	plt.plot(mx[i], my[i], 'r+')
-
 ax.set_title(filename)#[2:filenamelen])
 ax.set_xlabel('Time \n' + '(# iterations: ' + filename[0] + ')', fontsize=15)
 ax.set_ylabel('Change in voltage (Volt)', fontsize=15)
@@ -77,7 +79,8 @@ ax.set_ylabel('Change in voltage (Volt)', fontsize=15)
 
 
 # Heat/colour map plot of electrode data
-#sns.heatmap(df[["1", "2", "3"]][120:450].T, cmap ='RdYlGn')#, linewidths = 0.0, annot = True)
+#sns.heatmap(df[["1", "2", "3"]][120:450].T, cmap ='RdYlGn')#, linewidths =
+#0.0, annot = True)
 
 
 
@@ -103,6 +106,27 @@ ax.set_ylabel('Change in voltage (Volt)', fontsize=15)
 
 #m, b = np.polyfit(cablelens, df[["1", "2", "3"]], 1)
 #plt.plot(cablelens[120:430], df[["1"]][120:430])
-
 plt.tight_layout()
 plt.show()
+
+
+eit_data = df
+s_data = pd.read_csv("./stepper_values/copper_actuator_test_fixed_2021-08-09.csv",
+						sep='\t', lineterminator='\n')
+
+ss_data = s_data.iloc[::2]
+ss_data.reset_index()
+
+## code for plotting eit data vs stepper data on the same plot, 2 diff y axes
+fig, ax = plt.subplots()
+ax.plot(eit_data, 'ro')
+ax.set_xlabel("time", fontsize=14)
+ax.set_ylabel("EIT (V)", color="red", fontsize=14)
+
+ax2 = ax.twinx()
+ax2.plot(ss_data, 'bo')
+ax2.set_ylabel("Cable pull (in steps)", color="blue", fontsize=14)
+plt.show()
+
+fig.savefig('EIT_data_vs_steps--' + filename[:-4] + ".jpg", 
+			format='jpeg', dpi=600, bbox_inches='tight')

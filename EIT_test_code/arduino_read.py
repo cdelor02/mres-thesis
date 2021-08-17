@@ -15,11 +15,13 @@ TODO/things to be aware of:
 """
 
 from serial_ports import serial_ports
+from datetime import datetime
 import numpy as np
 import argparse
 import serial
 import time
 import sys 
+import os
 
 # Some command line argument parsing for usability
 parser = argparse.ArgumentParser(description='MRes project Arduino serial \
@@ -31,6 +33,7 @@ parser.add_argument('filename', type=str, help='destination filename \
 args      = parser.parse_args()
 filename  = args.filename
 directory = "stepper_values" # hardcoded for now
+filename  = filename[:-4]
 
 # using external function, get serial ports currently in use
 # (not sure if it will always select the Arduino one, but 
@@ -39,7 +42,7 @@ res = serial_ports()
 
 if res == []:
     print("No ports found. Are you sure the Arduino is plugged in?")
-    print("While you're at it, make sure the motor controller is plugged in")
+    print("While you're at it, make sure the motor controller is plugged in ;)")
     exit(1)
 
 if len(sys.argv) > 2:
@@ -84,14 +87,42 @@ arduino_port.flush()
 # numpy array to store stepper motor values
 stepper_motor_vals = np.array([])
 
+
+## Commence handshake
+#respo = arduino_port.readline(arduino_port.inWaiting()).strip()
+#print("first respo:", respo)
+#arduino_port.write(b'-1')
+#arduino_port.flush()
+#respo = 0
+##time.sleep(1)
+
+#respo = arduino_port.readline(arduino_port.inWaiting()).strip()
+#respo = respo.decode('utf-8')
+#if respo == '':
+#    respo = 0 
+#else: 
+#    respo = int(respo)
+
+#print("response:", respo)
+
+
+## clean out Arduino serial buffers
+#arduino_port.reset_output_buffer()
+#arduino_port.reset_input_buffer()
+#arduino_port.flush()
+
+#print("ending")
+
 while(True):
     if (arduino_port.inWaiting() > 0):
         reply = arduino_port.readline(arduino_port.inWaiting()).strip()#(arduino_port.inWaiting())#.strip()
         #arduino_port.reset_input_buffer()
         reply = reply.decode('utf-8')#'ascii', errors='ignore')
-        print(reply)
+        #print(reply)
+        if reply == "-1":
+            break
         stepper_motor_vals = np.append(stepper_motor_vals, reply)
-    time.sleep(0.01)
+    time.sleep(0.02)
 
 #exit()
 
@@ -105,11 +136,37 @@ while(True):
 
 # postprocessing of stepper values into a .csv file
 #stepper_motor_vals = stepper_motor_vals.astype(int) # I hope this is the right int
+
+##** there's an issue with some of the datapoints, so I just
+##   replace them with the previous value
+
+empties = np.where(stepper_motor_vals == '')
+for em in empties:
+    stepper_motor_vals[em] = stepper_motor_vals[em-1]
+
 step_cpy = stepper_motor_vals.astype(int)
 step_cpy = np.c_[step_cpy]
 
+## Get current date for concatenation to datafile (for bookkeeping)
+today     = datetime.now()
+todaydate = today.strftime("%Y-%m-%d")
+
+########## THIS DOESN'T WORK
+incr = 0
+savename = directory + "/" + filename + "-" + todaydate# + ".csv"
+while os.path.exists(savename+".csv"):
+    print("Checking for file", incr)
+    incr += 1
+
+savename = savename + "_" + str(incr) + ".csv"
+print("Saving data to ", savename)
 
 # https://stackoverflow.com/questions/24106575/numpy-savetxt-to-csv-with-integer-integer-string
-np.savetxt("./" + directory + "/" + filename, step_cpy, #np.c_[stepper_motor_vals], 
+np.savetxt("./" + savename, step_cpy, #np.c_[stepper_motor_vals], 
            fmt="%d", delimiter=",")
 
+#https://stackoverflow.com/questions/19609631/python-changing-row-index-of-pandas-data-frame
+#stepper_data = pd.read_csv(stepper filehere,...)
+#eit_data = pd.read_csv(eit filehere,...)
+#s_data.index=range(s_data.shape[0])
+#e_data = eit_data[["1", "2", "3"]]

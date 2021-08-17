@@ -14,6 +14,7 @@
 
 from __future__ import print_function
 import matplotlib.pyplot as plt
+from datetime import datetime
 from random import randint
 import pandas as pd
 import numpy as np
@@ -22,18 +23,21 @@ import math
 import time
 import sys
 import cv2
+import os
 
 
 # Some command line argument parsing for usability
 parser = argparse.ArgumentParser(description='MRes project optical tracking \
                                               for actuator ground truth \
                                               measurements.')
-parser.add_argument('image', type=str, help='path to image/video file, or [live] for live camera')
+parser.add_argument('image', type=str, help='path to image/video file, or 0 for live camera')
 parser.add_argument('filename', type=str, help='file in which to save the new video')
 args      = parser.parse_args()
 image     = args.image
 filename  = args.filename
 directory = "./opencv_videos"
+
+filename = filename[:-4] # remove filetype
 
 
 trackerTypes = ['BOOSTING',   'MIL',    'KCF',   'TLD', 
@@ -88,20 +92,22 @@ if __name__ == '__main__':
 
   # Set video to load
     #videoPath = "slow_traffic_small.mp4"#"videos/chaplin.mp4"
-  
-    videoPath = directory + "/" + image#"./opencv_videos/" + image#r_and_b_markers_actuator_footage.mp4"#filetypetest_trimmed.mp4"
-
+    if image == '0':
+        cap = cv2.VideoCapture(0)
+    else:
+        videoPath = directory + "/" + image#"./opencv_videos/" + image#r_and_b_markers_actuator_footage.mp4"#filetypetest_trimmed.mp4"
+        cap = cv2.VideoCapture(videoPath)
   # Create a video capture object to read videos
     #if image == '0' or '1':
     #    cap = cv2.VideoCapture(int(image))#videoPath)
     #else:
-    cap = cv2.VideoCapture(videoPath)
+    
 
     frame_width  = int(cap.get(3))
     frame_height = int(cap.get(4))
 
     # Define the codec and create VideoWriter object. The output is 'filename'.
-    out = cv2.VideoWriter("tracked_" + filename,
+    out = cv2.VideoWriter("tracked_" + filename + ".mp4",
                           cv2.VideoWriter_fourcc(*'mp4v'), #'M','J','P','G'), 
                           10, (frame_width, frame_height))
 
@@ -119,6 +125,7 @@ if __name__ == '__main__':
     colors = [] 
 
     ## Save the first frame for plotting later on!
+    print("Saving first frame as firstframe.jpg")
     cv2.imwrite("firstframe.jpg", frame)
 
 
@@ -177,6 +184,9 @@ while cap.isOpened():
     if not success:
         break
     
+    # UNCOMMENT IF YOU WANT TO SAVE JUST THE UNMODIFIED VIDEO
+    out.write(frame)
+
     # get updated location of objects in subsequent frames
     success, boxes = multiTracker.update(frame)
 
@@ -201,17 +211,18 @@ while cap.isOpened():
         ys.append(y)
     
     # draw lines between each detected point
-    for i in range(len(ys) - 1):
-        x0,y0 = xs[i], ys[i]
-        x1,y1 = xs[i+1], ys[i+1]
-        cv2.line(frame, (x0, y0), (x1, y1), color=colors[i], thickness=2)
+    #for i in range(len(ys) - 1):
+    #    x0,y0 = xs[i], ys[i]
+    #    x1,y1 = xs[i+1], ys[i+1]
+    #    cv2.line(frame, (x0, y0), (x1, y1), color=colors[i], thickness=2)
 
-        # find midpoint between each line
-        d = calculateDistance(x0, y0, x1, y1)
-        #print("Dist:", d, "pixels")
-        if d == 0:
-            print("BAD")
-            exit(1)
+    #    # find midpoint between each line
+    #    d = calculateDistance(x0, y0, x1, y1)
+    #    #print("Dist:", d, "pixels")
+    #    if d == 0:
+    #        print("BAD")
+    #        exit(1)
+
         ## dist_btwn... SHOULD BE BIGGER CAUSE IT SHOULD BE IN PIXELS NOT MM
         #theta = math.asin(d / (dist_btwn_joint_centres))
         #print("d", d, "theta", theta)
@@ -223,7 +234,8 @@ while cap.isOpened():
     # show frame
     cv2.imshow('MultiTracker', frame)
 
-    out.write(frame)
+    # UNCOMMENT IF YOU WANT TO SAVE VIDEO WITH CV drawing
+    #out.write(frame)
 
     # quit on ESC button
     if cv2.waitKey(1) & 0xFF == 27:  # Esc pressed
@@ -231,8 +243,13 @@ while cap.isOpened():
 
 out.release()
 
-  ## Format into arrays and save the data
-  ### --> NEED TO MAKE THIS FORMAT MORE CONVIENENT, ZIP THE VALUES
+
+## Get current date for concatenation to datafile (for bookkeeping)
+today     = datetime.now()
+todaydate = today.strftime("%Y-%m-%d")
+
+## Format into arrays and save the data
+### --> NEED TO MAKE THIS FORMAT MORE CONVIENENT, ZIP THE VALUES
 nxss = np.array(xss)
 nyss = np.array(yss)
 
@@ -253,7 +270,12 @@ coords[:,1::2] = nyss
 #np.savetxt("nxss.csv", nxss, fmt="%d", delimiter=",")
 #np.savetxt("nyss.csv", nyss, fmt="%d", delimiter=",")
 
-#np.savetxt("coords1.csv", coords, fmt="%d", delimiter=",")
+incr = 0
+savename = filename + "_points-" + todaydate
+while os.path.exists(savename+".csv"):
+    incr += 1
+
+np.savetxt(savename + "_" + str(incr) + ".csv", coords, fmt="%d", delimiter=",")#, lineterminator='\n')
 
 #df = pd.DataFrame(xs, columns=["x", "y"])
 
@@ -267,4 +289,46 @@ plt.ylabel("Y", fontsize=15)
 plt.title("Path of tracked points overlaid on first frame", fontsize=15)
 plt.tight_layout()
 plt.show()
+plt.savefig(savename + "firstframe_tracking.jpg", dpi=600)
+
+#### ****issue with the plotting is that the Y axis starts at 0 from the 
+#### top left, not the bottom left. so, i have to adjust it by the height
+#### of the image (from above, get it like this: im.shape[0])
+#### for example, to get correct value is z = im.shape[0] - desired height
+
+#read in data
+#df = pd.read_csv(csv_name)
+#pts = pd.read_csv("../computer_vision/copper_actuator_test_fixed_points-2021-08-09_0.csv", 
+#                      names=["X", "Y"])
+
+### **Converting from regular opencv image scaling to a regular coordinate grid
+#c = [30, d["Y"][0]]
+#adj = d["X"] - c[0]
+#opp = c[1] - d["Y"]
+## can try plotting these to see how they compare to the plotting below
+#plt.plot(adj, opp); plt.show()
+
+
+## If you want to plot it in the unmodified form
+#im = plt.imread("../computer_vision/firstframe.jpg")
+#implot = plt.imshow(im)
+#ax = plt.plot(d["X"], d["Y"])
+#plt.xlabel("X", fontsize=15)
+#plt.ylabel("Y", fontsize=15)
+#plt.title("OpenCV tracking data", fontsize=15)
+#plt.tight_layout()
+#plt.show()
+
+
+### computing right triangles from points
+#valid_points = np.where(adj > 0)[0]
+#valid_adj = adj[valid_points]
+#valid_opp = opp[valid_points]
+#thetas = np.arctan(valid_opp / valid_adj)
+#    ##--> maybe used np.arctan2() instead?
+#thetas = np.degrees(thetas)
+#np.savetxt("copper_actuator_test_fixed-thetas-2021-08-09.csv", 
+#           thetas, fmt="%1.3f", delimiter=",")
+
+
 
