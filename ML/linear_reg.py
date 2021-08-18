@@ -90,10 +90,10 @@ thetas = np.degrees(thetas)
 #np.savetxt("copper_wire_actuator_500_samples_40Hz_thetas-2021-08-17.csv", 
 #           thetas, fmt="%1.3f", delimiter=",")
 
-exit()
 
 theta_data = pd.read_csv("../data/copper_wire_actuator_500_samples_40Hz-2021-08-17/copper_wire_actuator_500_samples_40Hz_thetas-2021-08-17.csv",
                          sep='\t', lineterminator='\n', names=["ts"])
+
 #plt.plot(theta_data)
 #plt.xlabel("Time (samples)", fontsize=18)
 #plt.ylabel("Angle (degrees)", fontsize=18)

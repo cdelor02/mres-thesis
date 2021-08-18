@@ -9,6 +9,8 @@ Packages and modules used:
 - [OpenCV](https://opencv.org)
 - [NumPy](https://numpy.org)
 - [Scikit-learn](https://scikit-learn.org/stable/)
+- [Tensorflow](https://www.tensorflow.org)
+- [Keras](https://keras.io)
 
 
 Resources:
