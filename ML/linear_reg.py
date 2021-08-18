@@ -17,6 +17,18 @@ import time
 import sys
 import cv2
 
+# Arduino parameters
+baudrate           = 115200
+spool_diam         = 31.4 #mm
+stepsPerRevolution = 200
+stepsPer1mm        = 1 / (spool_diam/stepsPerRevolution)
+
+## Converting between steps and millimetres
+def stepToDist(num_steps):
+    return num_steps / stepsPer1mm
+
+def distToStep(dist):
+    return dist * stepsPer1mm
 
 ## Generate dataset
 #from random import randint
@@ -33,15 +45,61 @@ import cv2
 #    TRAIN_INPUT.append([a, b, c])
 #    TRAIN_OUTPUT.append(op)
 
-step_data = pd.read_csv("../EIT_test_code/stepper_values/copper_actuator_test_fixed_2021-08-09.csv",
+step_data = pd.read_csv("../data/copper_wire_actuator_500_samples_40Hz-2021-08-17/copper_wire_actuator_500_samples_40Hz-2021-08-17_0.csv",
                           sep='\t', lineterminator='\n', skiprows=1, names=["steps"])
-eit_data  = pd.read_csv("../EIT_test_code/copper_actuator_test_fixed.txt", 
+eit_data  = pd.read_csv("../data/copper_wire_actuator_500_samples_40Hz-2021-08-17/copper_wire_actuator_500_samples_40Hz.txt", 
                       sep='\t', lineterminator='\n', skiprows=1, 
                       names=["3", "B", "C", "D", "2", "F", "G", "H", "1"])
 eit_data = eit_data[["1", "2", "3"]]
 
-theta_data = pd.read_csv("../computer_vision/copper_actuator_test_fixed-thetas-2021-08-09.csv",
+point_data = pd.read_csv("../data/copper_wire_actuator_500_samples_40Hz-2021-08-17/copper_wire_actuator_500_samples_40Hz_points-2021-08-17_0.csv",
+                         lineterminator='\n')#sep='\t', lineterminator='\n', names=["X", "Y"])
+
+plt.rcParams.update({'font.size': 14})
+
+
+### **Converting from regular opencv image scaling to a regular coordinate grid
+point_data.columns = ["X", "Y"]
+c   = [30, point_data["Y"][0]]
+adj = point_data["X"] - c[0]
+opp = c[1] - point_data["Y"]
+# can try plotting these to see how they compare to the plotting below
+plt.plot(adj, opp); plt.show()
+
+
+ #If you want to plot it in the unmodified form
+im = plt.imread("../computer_vision/firstframe.jpg")
+implot = plt.imshow(im)
+ax = plt.plot(point_data["X"], point_data["Y"])
+plt.xlabel("X", fontsize=15)
+plt.ylabel("Y", fontsize=15)
+plt.title("OpenCV tracking data", fontsize=15)
+plt.tight_layout()
+plt.show()
+
+## ***POINT_DATA is the plotting in the normal OpenCV image format
+##  **ADJ (X axis) and OPP (Y axis) is the lengths of each side of the 
+
+# computing right triangles from points
+valid_points = np.where(adj > 0)[0]
+valid_adj = adj[valid_points]
+valid_opp = opp[valid_points]
+thetas = np.arctan(valid_opp / valid_adj)
+    ##--> maybe used np.arctan2() instead?
+thetas = np.degrees(thetas)
+#np.savetxt("copper_wire_actuator_500_samples_40Hz_thetas-2021-08-17.csv", 
+#           thetas, fmt="%1.3f", delimiter=",")
+
+exit()
+
+theta_data = pd.read_csv("../data/copper_wire_actuator_500_samples_40Hz-2021-08-17/copper_wire_actuator_500_samples_40Hz_thetas-2021-08-17.csv",
                          sep='\t', lineterminator='\n', names=["ts"])
+#plt.plot(theta_data)
+#plt.xlabel("Time (samples)", fontsize=18)
+#plt.ylabel("Angle (degrees)", fontsize=18)
+#plt.title("Angle values between baseline and tracked point", fontsize=20)
+#plt.show()
+
 
 #removal of large spikes, as per this tutorial
 # https://becominghuman.ai/linear-regression-in-python-with-pandas-scikit-learn-72574a2ec1a5
@@ -57,11 +115,13 @@ concat_data = pd.concat([step_data.iloc[0:len(theta_data), 0],
                                   eit_data["3"].iloc[0:len(theta_data)]],
                                   axis=1)
 
-X_train = concat_data["steps"].head(30)
-X_test  = concat_data["steps"].head(len(theta_data)-30)
+exit()
 
-y_train = theta_data.head(30)
-y_test  = theta_data.head(len(theta_data)-30)
+X_train = concat_data.head(300)
+X_test  = concat_data.head(len(theta_data)-300)
+
+y_train = theta_data.head(300)
+y_test  = theta_data.head(len(theta_data)-300)
 
 
 TRAIN_INPUT  = concat_data#step_data.iloc[0:len(theta_data),0]
@@ -76,17 +136,20 @@ predictor.fit(X_train, y_train)#X=TRAIN_INPUT, y=TRAIN_OUTPUT)
 outcome = predictor.predict(X_test)#X=X_TEST)
 coefficients = predictor.coef_
 
-print('Outcome : {}\nCoefficients : {}'.format(outcome, coefficients))
+print('(mean) Outcome : {}\nCoefficients : {}'.format(np.mean(outcome), coefficients))
 # https://scikit-learn.org/stable/auto_examples/linear_model/plot_ols.html
 print('Mean squared error: %.2f' % mean_squared_error(y_test, outcome))
 print('Coefficient of determination: %.2f' % r2_score(y_test, outcome))
 
 # Plot outputs
-plt.scatter(X_test, y_test,  color='black')
+
+y_tests = pd.concat([y_test, y_test, y_test, y_test], axis=1)
+
+plt.scatter(X_test, y_tests,  color='black')
 plt.plot(X_test, outcome, color='blue', linewidth=3)
 
 plt.xticks(())
 plt.yticks(())
-plt.title("Linear regression test: only steps as training feature")
+plt.title("Linear regression test --> a bunch of nonsense")
 
 plt.show()

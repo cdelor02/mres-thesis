@@ -106,27 +106,37 @@ ax.set_ylabel('Change in voltage (Volt)', fontsize=15)
 
 #m, b = np.polyfit(cablelens, df[["1", "2", "3"]], 1)
 #plt.plot(cablelens[120:430], df[["1"]][120:430])
-plt.tight_layout()
-plt.show()
+#plt.tight_layout()
+#plt.show()
 
 
 eit_data = df
-s_data = pd.read_csv("./stepper_values/copper_actuator_test_fixed_2021-08-09.csv",
+step_data = pd.read_csv("./stepper_values/copper_actuator_test_fixed_2021-08-09.csv",
 						sep='\t', lineterminator='\n')
 
-ss_data = s_data.iloc[::2]
-ss_data.reset_index()
+#ss_data = s_data.iloc[::2]
+#ss_data.reset_index()
 
 ## code for plotting eit data vs stepper data on the same plot, 2 diff y axes
+plt.rcParams.update({'font.size': 14})
+eit_data_trunc = eit_data[["1", "2", "3"]][:-4]
+steps_in_mm = stepToDist(step_data)
+
+figuresavename = "EIT_vs_cable_pull_data--5_iterations_bigger_font"
 fig, ax = plt.subplots()
-ax.plot(eit_data, 'ro')
-ax.set_xlabel("time", fontsize=14)
-ax.set_ylabel("EIT (V)", color="red", fontsize=14)
+ax.plot(eit_data_trunc, linewidth=4)#, color=["g", "c", "m"])#'r')
+ax.set_xlabel("time (sample number)", fontsize=18)
+ax.set_ylabel("EIT (V)", fontsize=18)
+increment  = eit_data_trunc["1"][np.argmax(eit_data_trunc["1"])] / 4
+#ax.set_ylim([increment,   
+#			 eit_data_trunc["1"][np.argmax(eit_data_trunc["1"])]+increment])
+ax.set_ylim([0.9, 1.2])
+#ax.legend(loc='upper left')
 
 ax2 = ax.twinx()
-ax2.plot(ss_data, 'bo')
-ax2.set_ylabel("Cable pull (in steps)", color="blue", fontsize=14)
+ax2.plot(step_data, 'b', linewidth=4)
+ax2.set_ylabel("Cable length (steps)", color="blue", fontsize=18)
+plt.title(figuresavename, fontsize=20)
 plt.show()
 
-fig.savefig('EIT_data_vs_steps--' + filename[:-4] + ".jpg", 
-			format='jpeg', dpi=600, bbox_inches='tight')
+#fig.savefig(figuresavename + ".jpg", format='jpeg', dpi=600, bbox_inches='tight')
