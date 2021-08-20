@@ -30,14 +30,13 @@ import os
 parser = argparse.ArgumentParser(description='MRes project optical tracking \
                                               for actuator ground truth \
                                               measurements.')
-parser.add_argument('image', type=str, help='path to image/video file, or 0 for live camera')
+parser.add_argument('image',    type=str, help='path to image/video file, or 0 for live camera')
 parser.add_argument('filename', type=str, help='file in which to save the new video')
 args      = parser.parse_args()
 image     = args.image
 filename  = args.filename
 directory = "./opencv_videos"
-
-filename = filename[:-4] # remove filetype
+filename  = filename[:-4] # remove filetype
 
 
 trackerTypes = ['BOOSTING',   'MIL',    'KCF',   'TLD', 

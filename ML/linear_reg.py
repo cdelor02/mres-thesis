@@ -17,6 +17,8 @@ import time
 import sys
 import cv2
 
+from scipy import signal
+
 # Arduino parameters
 baudrate           = 115200
 spool_diam         = 31.4 #mm
@@ -54,6 +56,34 @@ eit_data = eit_data[["1", "2", "3"]]
 
 point_data = pd.read_csv("../data/copper_wire_actuator_500_samples_40Hz-2021-08-17/copper_wire_actuator_500_samples_40Hz_points-2021-08-17_0.csv",
                          lineterminator='\n')#sep='\t', lineterminator='\n', names=["X", "Y"])
+
+
+
+### applying high pass filter to EIT data
+def butter_highpass(cutoff, fs, order=5):
+    nyq = 0.5 * fs
+    normal_cutoff = cutoff / nyq
+    b, a = signal.butter(order, normal_cutoff, btype='high', analog=False)
+    return b, a
+def butter_highpass_filter(data, cutoff, fs, order=5):
+    b, a = butter_highpass(cutoff, fs, order=order)
+    y = signal.filtfilt(b, a, data)
+    return y
+
+eit_data_trunc = eit_data[["1", "2", "3"]][:-4]
+
+#for example
+filtered_one   = butter_highpass_filter(eit_data_trunc["1"], .1, 40)
+filtered_two   = butter_highpass_filter(eit_data_trunc["2"], .1, 40)
+filtered_three = butter_highpass_filter(eit_data_trunc["3"], .1, 40)
+
+filtered_one = pd.DataFrame(filtered_one); filtered_two = pd.DataFrame(filtered_two);
+filtered_three = pd.DataFrame(filtered_three);
+
+eit_data_filtered = pd.concat([filtered_one, filtered_two, filtered_three], axis=1)
+
+eit_data_filtered.columns = ["1", "2", "3"]
+
 
 plt.rcParams.update({'font.size': 14})
 
@@ -109,19 +139,23 @@ step_data = step_data[(np.abs(stats.zscore(step_data)) < float(std_dev)).all(axi
 
 theta_data = pd.DataFrame(theta_data)
 # input data: step data | eit joint 1 | eit joint 1 | eit joint 3 |
-concat_data = pd.concat([step_data.iloc[0:len(theta_data), 0],
-                                  eit_data["1"].iloc[0:len(theta_data)],
-                                  eit_data["2"].iloc[0:len(theta_data)],
-                                  eit_data["3"].iloc[0:len(theta_data)]],
-                                  axis=1)
+#concat_data = pd.concat([step_data.iloc[0:len(theta_data), 0],
+#                                  eit_data_filtered["1"].iloc[0:len(theta_data)],
+#                                  eit_data_filtered["2"].iloc[0:len(theta_data)],
+#                                  eit_data_filtered["3"].iloc[0:len(theta_data)]],
+#                                  axis=1)
 
-exit()
+concat_data = pd.concat([eit_data_filtered["1"],
+                         eit_data_filtered["2"],
+                         eit_data_filtered["3"]],
+                         axis=1)
+
 
 X_train = concat_data.head(300)
-X_test  = concat_data.head(len(theta_data)-300)
+X_test  = concat_data.head(len(eit_data_filtered["1"])-300)
 
 y_train = theta_data.head(300)
-y_test  = theta_data.head(len(theta_data)-300)
+y_test  = theta_data.head(len(eit_data_filtered)-300)
 
 
 TRAIN_INPUT  = concat_data#step_data.iloc[0:len(theta_data),0]
