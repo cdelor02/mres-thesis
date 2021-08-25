@@ -13,19 +13,21 @@ import pandas as pd
 import numpy  as np
 import sys 
 
-filename = sys.argv[1]
+filename    = sys.argv[1]
 filenamelen = len(filename)
-plottype = sys.argv[2]
-xaxisbool = sys.argv[3]
+plottype    = sys.argv[2]
+xaxisbool   = sys.argv[3]
 
-nem = []
+fs = 40 #sampling frequency on the DAQ
+
+nem  = []
 cols = []
 
 if plottype == "--e":
-	nem = ["3", "B", "C", "D", "2", "F", "G", "H", "1"]
+	nem  = ["3", "B", "C", "D", "2", "F", "G", "H", "1"]
 	cols = ["1", "2", "3"]
 else:
-	nem = ["A", "B", "C", "D", "E", "F", "G", "H", "I"]
+	nem  = ["A", "B", "C", "D", "E", "F", "G", "H", "I"]
 	cols = ["A", "B", "C", "D", "E", "F", "G", "H", "I"]
 
 
@@ -64,9 +66,38 @@ my = np.zeros(3)
 #	mx[i] = np.argmax(df[cols[i]])
 #	my[i] = df[cols[i]][mx[i]]
 #	plt.plot(mx[i], my[i], 'r+')
-ax.set_title(filename)#[2:filenamelen])
-ax.set_xlabel('Time \n' + '(# iterations: ' + filename[0] + ')', fontsize=15)
+
+### !! create time X axis scale using freq
+timesc = np.linspace(0, len(df)/fs, len(df))
+
+ax.set_title(filename)
+ax.set_xlabel('Time (s)', fontsize=15)
 ax.set_ylabel('Change in voltage (Volt)', fontsize=15)
+plt.show()
+
+
+##### PLOT THE JOINT ANGLE MEASUREMENT DATA FROM 25/08/2021
+eit_data_a0 = pd.read_csv("../data/joint_angle_measurements-2021-08-24/joint_a0_angle_measurement.txt",
+						  sep='\t', lineterminator='\n', skiprows=1)
+
+eit_data_a1 = pd.read_csv("../data/joint_angle_measurements-2021-08-24/joint_a1_angle_measurement.txt",
+						  sep='\t', lineterminator='\n', skiprows=1)
+
+eit_data_a2 = pd.read_csv("../data/joint_angle_measurements-2021-08-24/joint_a2_angle_measurement.txt",
+						  sep='\t', lineterminator='\n', skiprows=1)
+
+eit_data_a0.columns = ["a", "b", "c"] #a
+eit_data_a1.columns = ["a", "b", "c"] #b
+eit_data_a2.columns = ["a", "b", "c"] #c
+
+eit_data_a2 = eit_data_a2[0:3040]
+
+eit_data_a0["a"].plot(); eit_data_a1["b"].plot(); eit_data_a2["c"].plot(); plt.show()
+
+# CAN"T REALLY DO THIS CAUSE THEY"RE DIFFERENT SIZES
+#eit_data_j = pd.concat([eit_data_a0["a"], eit_data_a1["b"], eit_data_a2["c"]], 
+#					   axis=1)
+
 
 
 # Find smallest change peaks/troughs
@@ -110,33 +141,33 @@ ax.set_ylabel('Change in voltage (Volt)', fontsize=15)
 #plt.show()
 
 
-eit_data = df
-step_data = pd.read_csv("./stepper_values/copper_actuator_test_fixed_2021-08-09.csv",
-						sep='\t', lineterminator='\n')
+#eit_data = df
+#step_data = pd.read_csv("./stepper_values/copper_actuator_test_fixed_2021-08-09.csv",
+#						sep='\t', lineterminator='\n')
 
-#ss_data = s_data.iloc[::2]
-#ss_data.reset_index()
+##ss_data = s_data.iloc[::2]
+##ss_data.reset_index()
 
-## code for plotting eit data vs stepper data on the same plot, 2 diff y axes
-plt.rcParams.update({'font.size': 14})
-eit_data_trunc = eit_data[["1", "2", "3"]][:-4]
-steps_in_mm = stepToDist(step_data)
+### code for plotting eit data vs stepper data on the same plot, 2 diff y axes
+#plt.rcParams.update({'font.size': 14})
+#eit_data_trunc = eit_data[["1", "2", "3"]][:-4]
+#steps_in_mm = stepToDist(step_data)
 
-figuresavename = "EIT_vs_cable_pull_data--5_iterations_bigger_font"
-fig, ax = plt.subplots()
-ax.plot(eit_data_trunc, linewidth=4)#, color=["g", "c", "m"])#'r')
-ax.set_xlabel("time (sample number)", fontsize=18)
-ax.set_ylabel("EIT (V)", fontsize=18)
-increment  = eit_data_trunc["1"][np.argmax(eit_data_trunc["1"])] / 4
-#ax.set_ylim([increment,   
-#			 eit_data_trunc["1"][np.argmax(eit_data_trunc["1"])]+increment])
-ax.set_ylim([0.9, 1.2])
-#ax.legend(loc='upper left')
+#figuresavename = "EIT_vs_cable_pull_data--5_iterations_bigger_font"
+#fig, ax = plt.subplots()
+#ax.plot(eit_data_trunc, linewidth=4)#, color=["g", "c", "m"])#'r')
+#ax.set_xlabel("time (sample number)", fontsize=18)
+#ax.set_ylabel("EIT (V)", fontsize=18)
+#increment  = eit_data_trunc["1"][np.argmax(eit_data_trunc["1"])] / 4
+##ax.set_ylim([increment,   
+##			 eit_data_trunc["1"][np.argmax(eit_data_trunc["1"])]+increment])
+#ax.set_ylim([0.9, 1.2])
+##ax.legend(loc='upper left')
 
-ax2 = ax.twinx()
-ax2.plot(step_data, 'b', linewidth=4)
-ax2.set_ylabel("Cable length (steps)", color="blue", fontsize=18)
-plt.title(figuresavename, fontsize=20)
-plt.show()
+#ax2 = ax.twinx()
+#ax2.plot(step_data, 'b', linewidth=4)
+#ax2.set_ylabel("Cable length (steps)", color="blue", fontsize=18)
+#plt.title(figuresavename, fontsize=20)
+#plt.show()
 
 #fig.savefig(figuresavename + ".jpg", format='jpeg', dpi=600, bbox_inches='tight')

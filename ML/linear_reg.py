@@ -25,6 +25,8 @@ spool_diam         = 31.4 #mm
 stepsPerRevolution = 200
 stepsPer1mm        = 1 / (spool_diam/stepsPerRevolution)
 
+fs = 40
+
 ## Converting between steps and millimetres
 def stepToDist(num_steps):
     return num_steps / stepsPer1mm
@@ -83,6 +85,9 @@ filtered_three = pd.DataFrame(filtered_three);
 eit_data_filtered = pd.concat([filtered_one, filtered_two, filtered_three], axis=1)
 
 eit_data_filtered.columns = ["1", "2", "3"]
+
+### !! create time X axis scale using freq
+timesc = np.linspace(0, len(eit_data)/fs, len(eit_data))
 
 
 plt.rcParams.update({'font.size': 14})

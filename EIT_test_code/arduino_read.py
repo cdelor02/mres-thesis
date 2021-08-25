@@ -42,7 +42,7 @@ res = serial_ports()
 
 if res == []:
     print("No ports found. Are you sure the Arduino is plugged in?")
-    print("While you're at it, make sure the motor controller is plugged in ;)")
+    print("While you're at it, make sure the motor controller is plugged in!")
     exit(1)
 
 if len(sys.argv) > 2:
@@ -154,7 +154,7 @@ todaydate = today.strftime("%Y-%m-%d")
 ########## THIS DOESN'T WORK
 incr = 0
 savename = directory + "/" + filename + "-" + todaydate# + ".csv"
-while os.path.exists(savename+".csv"):
+while os.path.exists(f"savename_{}" + ".csv"):
     print("Checking for file", incr)
     incr += 1
 
@@ -162,8 +162,7 @@ savename = savename + "_" + str(incr) + ".csv"
 print("Saving data to ", savename)
 
 # https://stackoverflow.com/questions/24106575/numpy-savetxt-to-csv-with-integer-integer-string
-np.savetxt("./" + savename, step_cpy, #np.c_[stepper_motor_vals], 
-           fmt="%d", delimiter=",")
+np.savetxt("./" + savename, step_cpy, fmt="%d", delimiter=",")
 
 #https://stackoverflow.com/questions/19609631/python-changing-row-index-of-pandas-data-frame
 #stepper_data = pd.read_csv(stepper filehere,...)
