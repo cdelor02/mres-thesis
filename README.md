@@ -11,6 +11,7 @@ Packages and modules used:
 - [Scikit-learn](https://scikit-learn.org/stable/)
 - [Tensorflow](https://www.tensorflow.org)
 - [Keras](https://keras.io)
+- [ffmpeg](https://www.ffmpeg.org)
 
 
 Resources:

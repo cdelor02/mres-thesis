@@ -31,7 +31,7 @@ bool shakeFlag          = false;
 float timeAtStep        = 0;
 String flushInputBuffer = "";
 char* data              = "";
-
+int   randStep          = 0;
 
 int loopcount=0;
 
@@ -80,7 +80,9 @@ void loop() {   // DON'T FORGET SHAFT_DIR
 //    }
 //  } 
 
-  if (iters == 5) {
+//  randStep = random(20, 101);
+
+  if (iters == 10) {
     digitalWrite(CAM_PIN, LOW);
     Timer3.stop();
     loopcount=0;
@@ -88,7 +90,7 @@ void loop() {   // DON'T FORGET SHAFT_DIR
     iters++; //only run it once
   }
 
-  if (iters < 5) {
+  if (iters < 10) {
     delay(2000);
     oneFlex(100,  4000);
     delay(2000);

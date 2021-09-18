@@ -2,6 +2,8 @@ import numpy as np
 import argparse
 import cv2
 
+print('OpenCV video recording script')
+
 parser = argparse.ArgumentParser(description='OpenCV video recording script. \
                                               Please include the filename \
                                               with the filetype included \
@@ -26,9 +28,10 @@ frame_height = int(cap.get(4))
 # Define the codec and create VideoWriter object. The output is 'filename'.
 out = cv2.VideoWriter("./" + directory + "/" + filename,
                       cv2.VideoWriter_fourcc(*'mp4v'), #'M','J','P','G'), 
-                      10, (frame_width, frame_height))
+                      40, (frame_width, frame_height))
 
 print("Commencing recording...")
+
 while(True):
   ret, frame = cap.read()
 

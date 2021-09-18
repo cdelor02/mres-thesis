@@ -122,7 +122,7 @@ while(True):
         if reply == "-1":
             break
         stepper_motor_vals = np.append(stepper_motor_vals, reply)
-    time.sleep(0.02)
+    #time.sleep(0.02)
 
 #exit()
 
@@ -154,7 +154,7 @@ todaydate = today.strftime("%Y-%m-%d")
 ########## THIS DOESN'T WORK
 incr = 0
 savename = directory + "/" + filename + "-" + todaydate# + ".csv"
-while os.path.exists(f"savename_{}" + ".csv"):
+while os.path.exists(savename + ".csv"):
     print("Checking for file", incr)
     incr += 1
 

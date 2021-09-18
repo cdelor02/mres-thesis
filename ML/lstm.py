@@ -4,6 +4,11 @@
 
 #https://machinelearningmastery.com/time-series-prediction-lstm-recurrent-neural-networks-python-keras/
 
+#https://medium.com/@nutanbhogendrasharma/simple-sequence-prediction-with-lstm-69ff0f4d57cd
+
+# this one seems followable
+#https://stackabuse.com/time-series-analysis-with-lstm-using-pythons-keras-library/
+
 from __future__ import print_function
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_absolute_error
